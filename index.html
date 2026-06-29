@@ -240,6 +240,7 @@ footer a{color:var(--gold2);text-decoration:none}
     <div class="nav">
       <button onclick="openEditor()">Fragen</button>
       <button onclick="openRules()">Regeln</button>
+      <button onclick="openInstall()">📲 App</button>
       <button onclick="sendFeedback()">Feedback</button>
       <button onclick="openImpressum()">Impressum</button>
     </div>
@@ -461,6 +462,47 @@ footer a{color:var(--gold2);text-decoration:none}
   </div>
 </div>
 
+<!-- ============ INSTALL / APP-ANLEITUNG ============ -->
+<div id="installOverlay" class="overlay hidden">
+  <div class="modal" style="max-width:500px">
+    <div class="mhead"><h2>Als App installieren</h2><button class="x" onclick="closeModal('installOverlay')">×</button></div>
+    <div class="mbody lead">
+      <p style="font-size:14.5px">Du kannst Zehnerwissen wie eine echte App auf den Startbildschirm legen – mit eigenem Icon, ohne Browser-Leiste, auch offline spielbar.</p>
+
+      <div class="divider"></div>
+
+      <p style="font-size:14px"><b style="color:var(--gold)"> iPhone / iPad (Safari)</b></p>
+      <ol style="margin:8px 0 0 2px;padding-left:20px;font-size:13.5px;line-height:1.8">
+        <li>Öffne die Seite in <b>Safari</b> (nicht Chrome).</li>
+        <li>Tippe unten auf das <b>Teilen-Symbol</b> (Quadrat mit Pfeil nach oben).</li>
+        <li>Wähle <b>„Zum Home-Bildschirm"</b>.</li>
+        <li>Mit <b>„Hinzufügen"</b> bestätigen – fertig.</li>
+      </ol>
+
+      <div class="divider"></div>
+
+      <p style="font-size:14px"><b style="color:var(--gold)">🤖 Android (Chrome)</b></p>
+      <ol style="margin:8px 0 0 2px;padding-left:20px;font-size:13.5px;line-height:1.8">
+        <li>Öffne die Seite in <b>Chrome</b>.</li>
+        <li>Tippe oben rechts auf das <b>Menü</b> (drei Punkte ⋮).</li>
+        <li>Wähle <b>„App installieren"</b> oder <b>„Zum Startbildschirm hinzufügen"</b>.</li>
+        <li>Mit <b>„Installieren"</b> bestätigen – fertig.</li>
+      </ol>
+
+      <div class="divider"></div>
+
+      <p style="font-size:14px"><b style="color:var(--gold)">💻 Computer (Chrome / Edge)</b></p>
+      <ol style="margin:8px 0 0 2px;padding-left:20px;font-size:13.5px;line-height:1.8">
+        <li>Achte in der Adressleiste rechts auf das <b>Installations-Symbol</b> (Monitor mit Pfeil) und klicke es an.</li>
+        <li>Alternativ: Menü (⋮) → <b>„… installieren"</b>.</li>
+      </ol>
+
+      <p class="hint" style="margin-top:14px">Hinweis: Das genaue Wording kann je nach Geräte- und Browser-Version leicht abweichen. Die Funktion heißt immer sinngemäß „Zum Startbildschirm" oder „Installieren".</p>
+      <button class="btn gold block" style="margin-top:12px" onclick="closeModal('installOverlay')">Verstanden</button>
+    </div>
+  </div>
+</div>
+
 <!-- ============ WELCOME / DATENSCHUTZ POPUP ============ -->
 <div id="welcomeOverlay" class="overlay hidden">
   <div class="modal" style="max-width:480px">
@@ -483,8 +525,11 @@ footer a{color:var(--gold2);text-decoration:none}
       </ul>
       <p class="muted" style="font-size:13px;margin-top:10px">Gespeichert auf einem Server in der EU (Supabase). <b style="color:var(--ink)">Es werden keine personenbezogenen Daten erhoben</b> – keine IP-Adresse, keine Cookies, keine Namen, keine Geräte-Kennung. Deine Spielernamen und alle Spielstände bleiben ausschließlich lokal auf deinem Gerät und werden nicht übertragen.</p>
 
+      <div class="divider"></div>
+      <p style="font-size:13px"><b style="color:var(--gold)">📲 Tipp:</b> <span class="muted">Du kannst die App auf deinen Startbildschirm legen – wie eine echte App, sogar offline spielbar. <a href="#" onclick="dismissWelcome();openInstall();return false;" style="color:var(--gold2)">So geht's →</a></span></p>
+
       <button class="btn gold block" style="margin-top:18px" onclick="dismissWelcome()">Alles klar – los geht's!</button>
-      <p class="hint center" style="margin-top:10px">Diese Infos findest du jederzeit wieder unter „Impressum".</p>
+      <p class="hint center" style="margin-top:10px">Diese Infos findest du jederzeit wieder unter „Impressum", die App-Anleitung unter „📲 App".</p>
     </div>
   </div>
 </div>
@@ -1502,6 +1547,7 @@ function importQuestions(e){
 
 /* ---------- Modals ---------- */
 function openRules(){ document.getElementById('rulesOverlay').classList.remove('hidden'); }
+function openInstall(){ document.getElementById('installOverlay').classList.remove('hidden'); }
 function openImpressum(){ document.getElementById('impressumOverlay').classList.remove('hidden'); }
 
 function maybeShowWelcome(){
