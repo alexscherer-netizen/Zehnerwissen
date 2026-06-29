@@ -1,0 +1,1485 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#0d1b2a">
+<title>Zehnerwissen – Das Push-your-luck Quiz</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='22' fill='%230d1b2a'/%3E%3Ctext x='50' y='70' font-size='58' font-family='Georgia,serif' font-weight='bold' text-anchor='middle' fill='%23ffd166'%3E10%3C/text%3E%3C/svg%3E">
+<link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='22' fill='%230d1b2a'/%3E%3Ctext x='50' y='70' font-size='58' font-family='Georgia,serif' font-weight='bold' text-anchor='middle' fill='%23ffd166'%3E10%3C/text%3E%3C/svg%3E">
+<link rel="manifest" href="data:application/json,%7B%22name%22%3A%22Zehnerwissen%22%2C%22short_name%22%3A%22Zehnerwissen%22%2C%22start_url%22%3A%22.%22%2C%22display%22%3A%22standalone%22%2C%22background_color%22%3A%22%230d1b2a%22%2C%22theme_color%22%3A%22%230d1b2a%22%2C%22icons%22%3A%5B%7B%22src%22%3A%22data%3Aimage%2Fsvg%2Bxml%2C%253Csvg%2520xmlns%253D%2527http%253A%252F%252Fwww.w3.org%252F2000%252Fsvg%2527%2520viewBox%253D%25270%25200%2520100%2520100%2527%253E%253Crect%2520width%253D%2527100%2527%2520height%253D%2527100%2527%2520rx%253D%252722%2527%2520fill%253D%2527%25230d1b2a%2527%252F%253E%253Ctext%2520x%253D%252750%2527%2520y%253D%252770%2527%2520font-size%253D%252758%2527%2520font-family%253D%2527Georgia%252Cserif%2527%2520font-weight%253D%2527bold%2527%2520text-anchor%253D%2527middle%2527%2520fill%253D%2527%2523ffd166%2527%253E10%253C%252Ftext%253E%253C%252Fsvg%253E%22%2C%22sizes%22%3A%22any%22%2C%22type%22%3A%22image%2Fsvg%2Bxml%22%7D%5D%7D">
+<style>
+:root{
+  --bg:#0d1b2a; --bg2:#13263c; --panel:#152c45; --panel2:#1b3654;
+  --ink:#eaf2ff; --muted:#9db4d0; --line:#27486e;
+  --gold:#ffd166; --gold2:#f7b32b; --green:#3ddc97; --red:#ff5d73;
+  --shadow:0 18px 40px rgba(0,0,0,.45);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%}
+html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
+body{
+  font-family:"Inter",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  background:radial-gradient(1200px 800px at 50% -10%,var(--bg2),var(--bg)) fixed;
+  color:var(--ink); -webkit-font-smoothing:antialiased;
+  padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
+  -webkit-tap-highlight-color:transparent; overscroll-behavior-y:contain;
+}
+button{-webkit-tap-highlight-color:transparent; touch-action:manipulation}
+.wrap{max-width:760px;margin:0 auto;padding:18px 16px 40px;min-height:100%}
+.serif{font-family:Georgia,"Times New Roman",serif}
+h1,h2,h3{font-family:Georgia,serif}
+
+/* ---- top bar ---- */
+.topbar{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:18px}
+.logo{display:flex;align-items:center;gap:11px;font-weight:700}
+.logo .badge{width:42px;height:42px;border-radius:12px;background:linear-gradient(145deg,#1b3654,#0d1b2a);
+  border:1px solid var(--line);display:grid;place-items:center;color:var(--gold);font-family:Georgia,serif;font-weight:700;font-size:20px;box-shadow:inset 0 1px 0 rgba(255,255,255,.06)}
+.logo .name{font-family:Georgia,serif;font-size:19px;letter-spacing:.3px}
+.logo .name small{display:block;font-family:Inter,sans-serif;font-size:10.5px;letter-spacing:2px;color:var(--muted);text-transform:uppercase;font-weight:600}
+.nav{display:flex;gap:6px}
+.nav button{background:var(--panel);border:1px solid var(--line);color:var(--muted);padding:8px 12px;border-radius:10px;font-size:13px;font-weight:600;cursor:pointer;transition:.15s}
+.nav button:hover{color:var(--ink);border-color:var(--gold2)}
+
+/* ---- cards / panels ---- */
+.card{background:linear-gradient(180deg,var(--panel),var(--bg2));border:1px solid var(--line);border-radius:18px;padding:22px;box-shadow:var(--shadow)}
+.card+.card{margin-top:16px}
+.eyebrow{font-size:11px;letter-spacing:3px;text-transform:uppercase;color:var(--gold2);font-weight:700;margin-bottom:10px}
+.lead{color:var(--muted);line-height:1.6;font-size:15px}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;border:none;border-radius:13px;padding:14px 18px;font-size:15px;font-weight:700;cursor:pointer;transition:.15s;font-family:Inter,sans-serif}
+.btn:active{transform:translateY(1px)}
+.btn.gold{background:linear-gradient(145deg,var(--gold),var(--gold2));color:#3a2a00;box-shadow:0 8px 20px rgba(247,179,43,.28)}
+.btn.green{background:linear-gradient(145deg,#46e8a5,#28c07d);color:#053022;box-shadow:0 8px 20px rgba(61,220,151,.25)}
+.btn.ghost{background:var(--panel2);color:var(--ink);border:1px solid var(--line)}
+.btn.red{background:linear-gradient(145deg,#ff7188,#ff4d66);color:#3a0010}
+.btn.block{width:100%}
+.btn:disabled{opacity:.45;cursor:not-allowed;transform:none}
+.row{display:flex;gap:10px;flex-wrap:wrap}
+.row.tight{gap:8px}
+
+input,select,textarea{width:100%;background:#0e2138;border:1px solid var(--line);color:var(--ink);border-radius:11px;padding:12px 13px;font-size:16px;font-family:inherit}
+input:focus,textarea:focus,select:focus{outline:2px solid var(--gold2);outline-offset:1px}
+label.fld{display:block;font-size:12.5px;color:var(--muted);font-weight:600;margin:0 0 6px 2px}
+.fieldset{margin-bottom:14px}
+
+.hidden{display:none!important}
+.muted{color:var(--muted)}
+.center{text-align:center}
+
+/* ---- players setup ---- */
+.player-row{display:flex;align-items:center;gap:9px;margin-bottom:9px}
+.player-row .dot{width:12px;height:12px;border-radius:50%;flex:0 0 auto}
+.player-row input{flex:1}
+.player-row button{flex:0 0 auto;background:transparent;border:1px solid var(--line);color:var(--muted);border-radius:9px;width:40px;height:42px;font-size:18px;cursor:pointer}
+.player-row button:hover{color:var(--red);border-color:var(--red)}
+
+/* ---- gameplay ---- */
+.scorestrip{display:flex;gap:8px;overflow-x:auto;padding-bottom:6px;margin-bottom:14px;-webkit-overflow-scrolling:touch}
+.scorechip{flex:0 0 auto;background:var(--panel2);border:1px solid var(--line);border-radius:12px;padding:8px 12px;min-width:96px;transition:.2s}
+.scorechip.active{border-color:var(--gold);background:linear-gradient(180deg,#23456b,#1a3556);box-shadow:0 0 0 2px rgba(255,209,102,.18)}
+.scorechip .pname{display:flex;align-items:center;gap:6px;font-size:12.5px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.scorechip .pname .d{width:9px;height:9px;border-radius:50%;flex:0 0 auto}
+.scorechip .pts{font-family:Georgia,serif;font-size:22px;margin-top:2px}
+
+.qhead{display:flex;align-items:flex-start;justify-content:space-between;gap:14px;margin-bottom:4px}
+.qcat{font-size:11px;letter-spacing:2.5px;text-transform:uppercase;color:var(--gold2);font-weight:700}
+.qtext{font-family:Georgia,serif;font-size:24px;line-height:1.3;margin:8px 0 4px}
+.qmeta{color:var(--muted);font-size:13px;margin-bottom:6px}
+
+/* timer ring */
+.timer{position:relative;width:60px;height:60px;flex:0 0 auto}
+.timer svg{transform:rotate(-90deg)}
+.timer .t-num{position:absolute;inset:0;display:grid;place-items:center;font-family:Georgia,serif;font-size:22px;font-weight:700}
+.timer.warn .t-num{color:var(--red)}
+
+/* the staircase of points */
+.ladder{display:flex;gap:5px;margin:16px 0 6px;justify-content:space-between}
+.rung{flex:1;text-align:center;border-radius:9px;padding:9px 2px 8px;background:var(--panel2);border:1px solid var(--line);position:relative;transition:.2s}
+.rung .n{font-size:10px;color:var(--muted);font-weight:700}
+.rung .v{font-family:Georgia,serif;font-size:16px;margin-top:1px}
+.rung.found{background:linear-gradient(180deg,#1c4d3a,#15402f);border-color:var(--green)}
+.rung.found .v{color:var(--green)}
+.rung.current{box-shadow:0 0 0 2px var(--gold);transform:translateY(-3px)}
+
+.bank{display:flex;align-items:center;justify-content:center;gap:12px;margin:14px 0;padding:14px;border-radius:14px;
+  background:linear-gradient(180deg,#10243b,#0c1c30);border:1px dashed var(--line)}
+.bank .lbl{font-size:12px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);font-weight:700}
+.bank .amt{font-family:Georgia,serif;font-size:34px;color:var(--gold);line-height:1}
+.bank .amt.pop{animation:pop .35s ease}
+@keyframes pop{0%{transform:scale(1)}40%{transform:scale(1.18)}100%{transform:scale(1)}}
+
+.answers{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-top:12px}
+.answers button{text-align:left;background:var(--panel2);border:1px solid var(--line);color:var(--ink);border-radius:11px;padding:12px 13px;font-size:14px;font-weight:600;cursor:pointer;transition:.13s;font-family:inherit;display:flex;align-items:center;gap:9px;min-height:52px}
+.answers button .ic{width:20px;height:20px;border-radius:6px;border:1px solid var(--line);flex:0 0 auto;display:grid;place-items:center;font-size:13px}
+.answers button:hover:not(:disabled){border-color:var(--gold2);transform:translateY(-1px)}
+.answers button:active:not(:disabled){transform:scale(.98);border-color:var(--gold)}
+.answers button.correct{background:linear-gradient(180deg,#1c4d3a,#143a2b);border-color:var(--green);color:#bff5dd}
+.answers button.correct .ic{background:var(--green);border-color:var(--green);color:#053022}
+.answers button.wrong{background:linear-gradient(180deg,#4d1c28,#3a1420);border-color:var(--red);color:#ffc9d2}
+.answers button.wrong .ic{background:var(--red);border-color:var(--red);color:#3a0010}
+.answers button:disabled{cursor:default}
+.answers button.reveal{opacity:.6}
+.answers button.reveal .ic{background:var(--green);border-color:var(--green);color:#053022}
+
+.toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%) translateY(120px);background:#0c1c30;border:1px solid var(--line);
+  color:var(--ink);padding:13px 20px;border-radius:13px;font-weight:700;box-shadow:var(--shadow);z-index:60;transition:.3s;max-width:90vw;text-align:center}
+.toast.show{transform:translateX(-50%) translateY(0)}
+.toast.good{border-color:var(--green)}
+.toast.bad{border-color:var(--red)}
+
+/* flash overlay */
+#flash{position:fixed;inset:0;pointer-events:none;z-index:55;opacity:0;transition:opacity .25s}
+#flash.green{background:radial-gradient(circle,rgba(61,220,151,.35),transparent 70%);opacity:1}
+#flash.red{background:radial-gradient(circle,rgba(255,93,115,.4),transparent 70%);opacity:1}
+
+/* modal */
+.overlay{position:fixed;inset:0;background:rgba(5,12,22,.72);backdrop-filter:blur(4px);z-index:50;display:grid;place-items:center;padding:16px}
+.modal{background:var(--panel);border:1px solid var(--line);border-radius:18px;max-width:640px;width:100%;max-height:88vh;overflow:auto;box-shadow:var(--shadow)}
+.modal .mhead{display:flex;align-items:center;justify-content:space-between;padding:18px 20px;border-bottom:1px solid var(--line);position:sticky;top:0;background:var(--panel);z-index:2}
+.modal .mhead h2{font-size:20px}
+.modal .mbody{padding:18px 20px}
+.x{background:transparent;border:none;color:var(--muted);font-size:24px;cursor:pointer;line-height:1;width:40px;height:40px;display:grid;place-items:center;margin:-8px -8px -8px 0}
+.x:hover{color:var(--ink)}
+
+/* editor list */
+.qlist{display:flex;flex-direction:column;gap:9px;margin-top:6px}
+.qitem{background:var(--panel2);border:1px solid var(--line);border-radius:12px;padding:12px 13px}
+.qitem .qi-top{display:flex;justify-content:space-between;align-items:flex-start;gap:10px}
+.qitem .qi-cat{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--gold2);font-weight:700}
+.qitem .qi-q{font-family:Georgia,serif;font-size:15px;margin-top:3px}
+.qitem .qi-a{color:var(--muted);font-size:12.5px;margin-top:6px;line-height:1.5}
+.qitem .qi-actions{display:flex;gap:6px;flex:0 0 auto}
+.qitem .qi-actions button{background:transparent;border:1px solid var(--line);color:var(--muted);border-radius:8px;padding:5px 9px;font-size:12px;cursor:pointer}
+.qitem .qi-actions button:hover{color:var(--ink);border-color:var(--gold2)}
+.tag{display:inline-block;background:#0e2138;border:1px solid var(--line);border-radius:7px;padding:2px 7px;font-size:11px;color:var(--muted);margin:2px 4px 2px 0}
+
+.results .res-row{display:flex;align-items:center;gap:12px;padding:13px 14px;border-radius:12px;background:var(--panel2);border:1px solid var(--line);margin-bottom:8px}
+.results .res-row .rk{font-family:Georgia,serif;font-size:26px;width:42px;text-align:center;flex:0 0 auto}
+.results .res-row.win{border-color:var(--gold);background:linear-gradient(180deg,#2a3c1c,#1f3656)}
+.results .res-row .rn{flex:1;font-weight:700}
+.results .res-row .rp{font-family:Georgia,serif;font-size:24px;color:var(--gold)}
+
+.hint{font-size:12.5px;color:var(--muted);line-height:1.55;margin-top:8px}
+.divider{height:1px;background:var(--line);margin:16px 0}
+footer{margin-top:26px;text-align:center;color:var(--muted);font-size:12px;line-height:1.7}
+footer a{color:var(--gold2);text-decoration:none}
+.paypal{display:inline-flex;align-items:center;gap:7px;background:#ffc439;color:#003087;font-weight:800;padding:9px 15px;border-radius:10px;text-decoration:none;margin-top:10px;font-size:13.5px}
+.pill{display:inline-block;background:var(--panel2);border:1px solid var(--line);border-radius:20px;padding:5px 12px;font-size:12px;color:var(--muted);font-weight:600}
+
+/* ===== Tablet (Hochformat & größere Phones quer) ===== */
+@media(min-width:561px) and (max-width:1024px){
+  .wrap{max-width:680px;padding:22px 22px 48px}
+  .answers{grid-template-columns:repeat(2,1fr);gap:10px}
+  .answers button{min-height:56px;font-size:15px}
+  .qtext{font-size:26px}
+  .btn{padding:15px 20px}
+}
+
+/* ===== Smartphone (Hochformat) ===== */
+@media(max-width:560px){
+  .wrap{padding:14px 13px 36px}
+  .topbar{margin-bottom:14px}
+  .logo .badge{width:38px;height:38px;font-size:18px}
+  .logo .name{font-size:17px}
+  .nav button{padding:9px 11px;font-size:12.5px;min-height:40px}
+  .card{padding:18px 16px;border-radius:16px}
+  .qtext{font-size:21px}
+  .answers{grid-template-columns:1fr;gap:9px}
+  .answers button{min-height:54px;font-size:15px;padding:13px 14px}
+  .ladder{flex-wrap:wrap;gap:6px}
+  .rung{flex:1 1 16%;min-width:46px;padding:8px 2px 7px}
+  .bank{padding:13px;gap:10px}
+  .bank .amt{font-size:30px}
+  .btn{padding:15px 18px;font-size:15px;min-height:50px}
+  .scorechip{min-width:88px;padding:9px 12px}
+  .scorechip .pts{font-size:20px}
+  .player-row input{font-size:16px}
+  .modal{border-radius:16px 16px 0 0;max-height:92vh}
+  .modal .mhead{padding:16px 17px}
+  .modal .mbody{padding:16px 17px}
+  .overlay{align-items:flex-end;padding:0}
+  #confirmOverlay{align-items:center;padding:16px}
+  #confirmOverlay .modal{border-radius:18px}
+}
+
+/* ===== Kleine Smartphones (iPhone SE etc.) ===== */
+@media(max-width:380px){
+  .qtext{font-size:19px}
+  .logo .name small{font-size:9.5px;letter-spacing:1.5px}
+  .nav button{padding:8px 9px;font-size:12px}
+  .rung{flex:1 1 18%;min-width:42px}
+  .rung .v{font-size:14px}
+  .bank .amt{font-size:27px}
+  .ladder{gap:5px}
+}
+
+/* ===== Handy im Querformat (flache Höhe) ===== */
+@media(max-height:480px) and (orientation:landscape){
+  .wrap{padding:10px 16px 24px}
+  .topbar{margin-bottom:10px}
+  .card{padding:14px 16px}
+  .qtext{font-size:19px;margin:6px 0 2px}
+  .answers{grid-template-columns:repeat(2,1fr);gap:7px}
+  .answers button{min-height:46px}
+  .ladder{margin:10px 0 4px}
+  .bank{margin:9px 0;padding:9px}
+  .bank .amt{font-size:26px}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="topbar">
+    <div class="logo">
+      <div class="badge">10</div>
+      <div class="name">Zehnerwissen<small>Push your luck</small></div>
+    </div>
+    <div class="nav">
+      <button onclick="openEditor()">Fragen</button>
+      <button onclick="openRules()">Regeln</button>
+      <button onclick="openImpressum()">Impressum</button>
+    </div>
+  </div>
+
+  <!-- ============ SETUP ============ -->
+  <div id="screen-setup">
+    <div class="card">
+      <div class="eyebrow">Neue Partie</div>
+      <h1 style="font-size:27px;line-height:1.2">Zu jeder Frage gibt es <span style="color:var(--gold)">bis zu 10</span> richtige Antworten.</h1>
+      <p class="lead" style="margin-top:10px">Nenne eine richtige – und entscheide: noch eine wagen für mehr Punkte, oder lieber sichern? Eine falsche Antwort, und die ganze Runde ist weg. <span class="muted">Manche Fragen haben weniger als 10 richtige – die Punkte-Treppe verrät dir die genaue Zahl.</span></p>
+
+      <div class="divider"></div>
+
+      <div class="eyebrow">Spieler</div>
+      <div id="playerList"></div>
+      <button class="btn ghost" style="margin-top:6px" onclick="addPlayer()">+ Spieler hinzufügen</button>
+
+      <div class="divider"></div>
+
+      <div class="row">
+        <div style="flex:1;min-width:140px">
+          <label class="fld">Runden (Fragen gesamt)</label>
+          <select id="roundCount">
+            <option value="5">5 Runden</option>
+            <option value="8" selected>8 Runden</option>
+            <option value="10">10 Runden</option>
+            <option value="15">15 Runden</option>
+          </select>
+        </div>
+        <div style="flex:1;min-width:140px">
+          <label class="fld">Zug-Timer</label>
+          <select id="timerSel">
+            <option value="0">Aus</option>
+            <option value="10">10 Sekunden</option>
+            <option value="15" selected>15 Sekunden</option>
+            <option value="20">20 Sekunden</option>
+            <option value="30">30 Sekunden</option>
+          </select>
+        </div>
+      </div>
+      <div class="fieldset" style="margin-top:14px">
+        <label class="fld">Kategorien</label>
+        <div id="catFilter" class="row tight"></div>
+      </div>
+
+      <button class="btn gold block" style="margin-top:8px" onclick="startGame()">Partie starten</button>
+      <p class="hint" id="setupHint"></p>
+    </div>
+
+    <div class="card">
+      <div class="eyebrow">Bestenliste</div>
+      <div id="highscoreBox"><p class="muted">Noch keine Einträge. Spiel die erste Partie!</p></div>
+    </div>
+  </div>
+
+  <!-- ============ GAME ============ -->
+  <div id="screen-game" class="hidden">
+    <div class="scorestrip" id="scoreStrip"></div>
+
+    <div class="card">
+      <div class="qhead">
+        <div>
+          <div class="qcat" id="gCat">Kategorie</div>
+          <div class="qmeta" id="gMeta">Runde 1 von 8</div>
+        </div>
+        <div class="timer hidden" id="timerWrap">
+          <svg width="60" height="60" viewBox="0 0 60 60">
+            <circle cx="30" cy="30" r="26" fill="none" stroke="#27486e" stroke-width="5"/>
+            <circle id="timerArc" cx="30" cy="30" r="26" fill="none" stroke="#ffd166" stroke-width="5" stroke-linecap="round" stroke-dasharray="163.36" stroke-dashoffset="0"/>
+          </svg>
+          <div class="t-num" id="timerNum">15</div>
+        </div>
+      </div>
+      <div class="qtext" id="gQuestion">Frage …</div>
+
+      <div class="ladder" id="ladder"></div>
+
+      <div class="bank">
+        <div>
+          <div class="lbl">Aktuelle Runde</div>
+        </div>
+        <div class="amt" id="bankAmt">0</div>
+        <div>
+          <div class="lbl muted" id="turnName">am Zug</div>
+        </div>
+      </div>
+
+      <div class="answers" id="answers"></div>
+
+      <div class="row" style="margin-top:14px">
+        <button class="btn green" style="flex:1" id="bankBtn" onclick="bankPoints()">Sichern ✓</button>
+        <button class="btn ghost" onclick="confirmQuit()">Beenden</button>
+      </div>
+      <p class="hint" id="gameHint">Tippe eine Antwort an, von der du glaubst, dass sie zu den richtigen gehört.</p>
+    </div>
+  </div>
+
+  <!-- ============ HANDOFF (Geräteübergabe) ============ -->
+  <div id="screen-handoff" class="hidden">
+    <div class="card center" style="margin-top:8vh">
+      <div class="eyebrow" id="handoffPrev">—</div>
+      <div style="font-size:54px;margin:14px 0">📲</div>
+      <h1 class="serif" style="font-size:26px;line-height:1.25">Gib das Gerät weiter an</h1>
+      <div style="display:flex;align-items:center;justify-content:center;gap:11px;margin:16px 0 6px">
+        <span class="dot" id="handoffDot" style="width:18px;height:18px;border-radius:50%"></span>
+        <span class="serif" id="handoffName" style="font-size:30px;color:var(--gold)">Spieler</span>
+      </div>
+      <p class="lead" id="handoffMeta">Nächste Frage · Runde X von Y</p>
+      <button class="btn gold block" style="margin-top:20px" id="handoffBtn" onclick="revealRound()">Bereit – Frage aufdecken</button>
+      <p class="hint">Erst drücken, wenn der genannte Spieler das Gerät in der Hand hat.</p>
+    </div>
+  </div>
+
+  <!-- ============ RESULTS ============ -->
+  <div id="screen-results" class="hidden">
+    <div class="card center">
+      <div class="eyebrow">Partie beendet</div>
+      <h1 class="serif" style="font-size:28px" id="winnerLine">🏆</h1>
+      <div class="results" id="resultsBox" style="margin-top:18px;text-align:left"></div>
+      <div class="row" style="margin-top:16px">
+        <button class="btn gold" style="flex:1" onclick="rematch()">Revanche</button>
+        <button class="btn ghost" style="flex:1" onclick="toSetup()">Zum Menü</button>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    <div class="pill">Pass &amp; Play · Lokal gespeichert</div>
+    <div style="margin-top:12px">Gefällt dir die App? Spendier mir einen Kaffee:</div>
+    <a class="paypal" href="https://paypal.me/AlexanderGlauche" target="_blank" rel="noopener">PayPal · paypal.me/AlexanderGlauche</a>
+    <div style="margin-top:14px">Inspiriert vom Spielprinzip von Smart10 · eigenständige, nicht-kommerzielle Umsetzung.</div>
+  </footer>
+</div>
+
+<!-- ============ EDITOR MODAL ============ -->
+<div id="editorOverlay" class="overlay hidden">
+  <div class="modal">
+    <div class="mhead"><h2>Fragen-Editor</h2><button class="x" onclick="closeEditor()">×</button></div>
+    <div class="mbody">
+      <div class="card" style="box-shadow:none;background:var(--bg2)">
+        <div class="eyebrow" id="formTitle">Neue Frage</div>
+        <div class="fieldset">
+          <label class="fld">Frage</label>
+          <input id="fQuestion" placeholder="z. B. Welche Länder grenzen an Deutschland?">
+        </div>
+        <div class="row">
+          <div style="flex:1;min-width:140px" class="fieldset">
+            <label class="fld">Kategorie</label>
+            <input id="fCat" placeholder="z. B. Geografie" list="catSuggest">
+            <datalist id="catSuggest"></datalist>
+          </div>
+        </div>
+        <div class="fieldset">
+          <label class="fld">Die 10 richtigen Antworten (eine pro Zeile)</label>
+          <textarea id="fCorrect" rows="5" placeholder="Frankreich&#10;Belgien&#10;Niederlande&#10;…"></textarea>
+          <p class="hint" id="correctCount">0 / 10</p>
+        </div>
+        <div class="fieldset">
+          <label class="fld">Falsche Antworten (Köder, eine pro Zeile) – optional, empfohlen 6–10</label>
+          <textarea id="fWrong" rows="4" placeholder="Spanien&#10;Portugal&#10;Italien&#10;…"></textarea>
+        </div>
+        <div class="row">
+          <button class="btn gold" style="flex:1" id="saveQBtn" onclick="saveQuestion()">Frage speichern</button>
+          <button class="btn ghost" onclick="resetForm()">Leeren</button>
+        </div>
+      </div>
+
+      <div class="divider"></div>
+      <div class="row" style="justify-content:space-between;align-items:center">
+        <div class="eyebrow" style="margin:0">Alle Fragen (<span id="qTotal">0</span>)</div>
+        <div class="row tight">
+          <button class="btn ghost" style="padding:8px 12px;font-size:13px" onclick="exportQuestions()">Export</button>
+          <button class="btn ghost" style="padding:8px 12px;font-size:13px" onclick="document.getElementById('importFile').click()">Import</button>
+          <input type="file" id="importFile" accept="application/json" class="hidden" onchange="importQuestions(event)">
+        </div>
+      </div>
+      <input id="qSearch" placeholder="Fragen durchsuchen…" style="margin-top:10px" oninput="renderQList()">
+      <div class="qlist" id="qList"></div>
+      <button class="btn ghost block" style="margin-top:14px" onclick="restoreDefaults()">Standard-Fragen wiederherstellen</button>
+    </div>
+  </div>
+</div>
+
+<!-- ============ RULES MODAL ============ -->
+<div id="rulesOverlay" class="overlay hidden">
+  <div class="modal">
+    <div class="mhead"><h2>So wird gespielt</h2><button class="x" onclick="closeModal('rulesOverlay')">×</button></div>
+    <div class="mbody lead">
+      <p><b style="color:var(--gold)">Das Prinzip:</b> Zu jeder Frage gibt es <b>bis zu 10 richtige Antworten</b>. Sie sind zu Beginn verdeckt.</p>
+      <p style="margin-top:8px" class="muted">Hinweis: Nicht jede Frage hat genau 10 richtige Antworten – manche Themen haben weniger (z. B. „9 Nachbarländer"). Die Punkte-Treppe oben zeigt dir an, wie viele es bei der aktuellen Frage gibt.</p>
+      <div class="divider"></div>
+      <p><b>1. Antwort wählen.</b> Der Spieler am Zug tippt eine Antwort an, von der er glaubt, dass sie zu den richtigen gehört.</p>
+      <p style="margin-top:8px"><b>2. Punkte steigen.</b> Die 1. gefundene Antwort bringt 1 Punkt, die 2. dann 2, die 3. dann 3 … – je länger man weitermacht, desto mehr wandert in die <b>Rundenkasse</b>.</p>
+      <p style="margin-top:8px"><b>3. Sichern oder riskieren.</b> Nach jeder richtigen Antwort: <span style="color:var(--green)">Sichern</span> – die Kasse wandert aufs Konto, der Nächste ist dran. Oder weitermachen für mehr.</p>
+      <p style="margin-top:8px"><b>4. Falsch = alles weg.</b> Eine falsche Antwort beendet den Zug sofort, die komplette Rundenkasse verfällt. Push your luck!</p>
+      <div class="divider"></div>
+      <p class="muted">Wer nach allen Runden die meisten Punkte hat, gewinnt. Bei Timer: läuft die Zeit ab, zählt es wie „falsch".</p>
+    </div>
+  </div>
+</div>
+
+<!-- ============ IMPRESSUM MODAL ============ -->
+<div id="impressumOverlay" class="overlay hidden">
+  <div class="modal">
+    <div class="mhead"><h2>Impressum</h2><button class="x" onclick="closeModal('impressumOverlay')">×</button></div>
+    <div class="mbody lead">
+      <p><b>Alexander Scherer</b><br>Mertensstraße 18<br>13587 Berlin</p>
+      <p style="margin-top:10px">E-Mail: <a href="mailto:info@alexander-scherer.com" style="color:var(--gold2)">info@alexander-scherer.com</a></p>
+      <p style="margin-top:10px" class="muted">Kleingewerbe · Fotograf · Kleinunternehmer gemäß §19 UStG (keine Ausweisung der Umsatzsteuer).</p>
+      <div class="divider"></div>
+      <p class="muted" style="font-size:13px">„Smart10" ist eine Marke der Piatnik. Diese App ist eine eigenständige, nicht-kommerzielle Hobby-Umsetzung des Spielprinzips und steht in keiner Verbindung zum Rechteinhaber.</p>
+    </div>
+  </div>
+</div>
+
+<!-- ============ CONFIRM MODAL ============ -->
+<div id="confirmOverlay" class="overlay hidden">
+  <div class="modal" style="max-width:420px">
+    <div class="mbody">
+      <h2 class="serif" style="font-size:20px;margin-bottom:8px" id="confirmTitle">Bestätigen</h2>
+      <p class="lead" id="confirmMsg" style="font-size:14.5px">Sicher?</p>
+      <div class="row" style="margin-top:18px">
+        <button class="btn ghost" style="flex:1" id="confirmNo">Abbrechen</button>
+        <button class="btn red" style="flex:1" id="confirmYes">Ja, weiter</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="flash"></div>
+<div id="toast" class="toast"></div>
+
+<script>
+/* ============================================================
+   ZEHNERWISSEN – Smart10-inspiriertes Push-your-luck Quiz
+   Single-File · Vanilla JS · localStorage
+   ============================================================ */
+
+const LS_Q = 'zw_questions_v1';
+const LS_HS = 'zw_highscore_v1';
+const LS_NAMES = 'zw_players_v1';
+const PLAYER_COLORS = ['#ffd166','#3ddc97','#5da9ff','#ff5d73','#c792ea','#ffa45d','#4dd0e1','#f78fb3'];
+
+/* ---------- Default question bank ---------- */
+const DEFAULT_QUESTIONS = [
+  {cat:'Geografie', q:'Welche Länder grenzen an Deutschland? (9 Nachbarn)',
+   correct:['Frankreich','Belgien','Niederlande','Luxemburg','Dänemark','Polen','Tschechien','Österreich','Schweiz'],
+   wrong:['Spanien','Italien','Ungarn','Slowenien','Norwegen','Liechtenstein','Slowakei']},
+  {cat:'Geografie', q:'Welche dieser Städte sind Landeshauptstadt eines deutschen Bundeslandes?',
+   correct:['München','Stuttgart','Dresden','Erfurt','Mainz','Magdeburg','Kiel','Schwerin','Potsdam','Hannover'],
+   wrong:['Köln','Frankfurt','Nürnberg','Leipzig','Mannheim','Dortmund','Karlsruhe']},
+  {cat:'Wissenschaft', q:'Welche dieser Elemente sind Edelgase oder Halogene? (10 echte Elemente)',
+   correct:['Helium','Neon','Argon','Krypton','Xenon','Radon','Fluor','Chlor','Brom','Iod'],
+   wrong:['Eisen','Natrium','Kalium','Schwefel','Kohlenstoff','Calcium']},
+  {cat:'Sport', q:'Welche dieser Vereine wurden schon Deutscher Handball-Meister (Bundesliga seit 1966)?',
+   correct:['THW Kiel','SG Flensburg-Handewitt','Rhein-Neckar Löwen','Füchse Berlin','SC Magdeburg','TBV Lemgo','VfL Gummersbach','HSV Hamburg','Frisch Auf Göppingen','TV Großwallstadt'],
+   wrong:['TSV Hannover-Burgdorf','MT Melsungen','Bergischer HC','HSG Wetzlar','FC Bayern','HC Erlangen']},
+  {cat:'Film', q:'Welche dieser Filme gewannen den Oscar als „Bester Film" (Filmjahre 2000–2014)?',
+   correct:['Gladiator','A Beautiful Mind','Chicago','Million Dollar Baby','The Departed','No Country for Old Men','Slumdog Millionaire','The King\u2019s Speech','Argo','Birdman'],
+   wrong:['Avatar','Inception','La La Land','Brokeback Mountain','Titanic','Pulp Fiction']},
+  {cat:'Musik', q:'Welche dieser Bands stammen aus Großbritannien?',
+   correct:['The Beatles','Queen','The Rolling Stones','Coldplay','Oasis','Radiohead','Led Zeppelin','Pink Floyd','The Who','Arctic Monkeys'],
+   wrong:['Nirvana','Metallica','U2','ABBA','Rammstein','Red Hot Chili Peppers']},
+  {cat:'Natur', q:'Welche dieser Tiere sind Säugetiere?',
+   correct:['Delfin','Fledermaus','Wal','Igel','Känguru','Elefant','Schnabeltier','Maulwurf','Seehund','Gürteltier'],
+   wrong:['Pinguin','Hai','Krokodil','Strauß','Frosch','Schildkröte']},
+  {cat:'Technik', q:'Welche dieser Begriffe bezeichnen Programmiersprachen?',
+   correct:['Python','Java','Rust','Go','Kotlin','Swift','Ruby','Perl','Haskell','TypeScript'],
+   wrong:['HTTP','HTML','JSON','Linux','Docker','MySQL']},
+  {cat:'Geschichte', q:'Welche dieser Personen waren Bundeskanzler der Bundesrepublik Deutschland?',
+   correct:['Konrad Adenauer','Ludwig Erhard','Kurt Georg Kiesinger','Willy Brandt','Helmut Schmidt','Helmut Kohl','Gerhard Schröder','Angela Merkel','Olaf Scholz','Friedrich Merz'],
+   wrong:['Walter Scheel','Richard von Weizsäcker','Frank-Walter Steinmeier','Theodor Heuss','Joachim Gauck']},
+  {cat:'Essen & Trinken', q:'Welche dieser Pasta-Sorten gibt es wirklich?',
+   correct:['Penne','Fusilli','Rigatoni','Farfalle','Tagliatelle','Orecchiette','Linguine','Tortellini','Maccheroni','Cannelloni'],
+   wrong:['Marinara','Carbonara','Pesto','Bolognese','Arrabbiata','Ciabatta']},
+
+  /* ---------- IT-Kategorie (faktisch geprüft) ---------- */
+  {cat:'IT', q:'Welche dieser Dienste nutzen standardmäßig einen „Well-Known"-Port (unter 1024)?',
+   correct:['HTTP (80)','HTTPS (443)','SSH (22)','DNS (53)','FTP (21)','SMTP (25)','Telnet (23)','POP3 (110)','IMAP (143)','LDAP (389)'],
+   wrong:['MySQL (3306)','RDP (3389)','PostgreSQL (5432)','MongoDB (27017)','Redis (6379)','HTTP-Alt (8080)']},
+
+  {cat:'IT', q:'Welche dieser HTTP-Statuscodes gibt es wirklich?',
+   correct:['200','301','302','304','400','401','403','404','500','503'],
+   wrong:['210','333','450','600','999','1000']},
+
+  {cat:'IT', q:'Welche dieser IP-Adressbereiche sind private Netze nach RFC 1918?',
+   correct:['10.0.0.1','10.255.255.254','172.16.0.5','172.31.255.1','192.168.0.1','192.168.1.100','10.10.10.10','172.20.5.5','192.168.178.1','10.1.2.3'],
+   wrong:['8.8.8.8','172.32.0.1','192.169.0.1','11.0.0.1','1.1.1.1','100.64.0.1']},
+
+  {cat:'IT', q:'Welche dieser Begriffe sind echte Linux-/Unix-Terminalbefehle?',
+   correct:['grep','chmod','ls','sudo','ps','kill','mkdir','chown','tar','awk'],
+   wrong:['ipconfig','dir','cls','tasklist','robocopy','attrib']},
+
+  {cat:'IT', q:'Welche dieser Begriffe bezeichnen echte Dateisysteme?',
+   correct:['NTFS','FAT32','exFAT','ext4','Btrfs','ZFS','APFS','XFS','ReFS','HFS+'],
+   wrong:['HTTP','RAID','GRUB','BIOS','SATA','NTLM']},
+
+  {cat:'IT', q:'Welche dieser Begriffe bezeichnen Schichten des OSI-Modells?',
+   correct:['Bitübertragung','Sicherung','Vermittlung','Transport','Sitzung','Darstellung','Anwendung','Physical','Data Link','Network'],
+   wrong:['Internet','Routing','Firewall','Session-Hijacking','Gateway','Switching']},
+
+  {cat:'IT', q:'Welche dieser Begriffe sind echte Netzwerkprotokolle?',
+   correct:['TCP','UDP','ICMP','ARP','DHCP','DNS','HTTP','FTP','SNMP','SMTP'],
+   wrong:['HTML','JSON','BIOS','RAID','SATA','UEFI']},
+
+  {cat:'IT', q:'Welche dieser Rollen/Dienste gibt es in Windows Server?',
+   correct:['Active Directory','DNS-Server','DHCP-Server','Hyper-V','IIS','Dateiserver','Druckserver','WSUS','AD CS','Remote Desktop Services'],
+   wrong:['systemd','cron','Apache','launchd','SELinux','iptables']},
+
+  {cat:'IT', q:'Welche dieser Werte sind gültige IPv4-Subnetzmasken?',
+   correct:['255.0.0.0','255.255.0.0','255.255.255.0','255.255.255.128','255.255.255.192','255.255.255.224','255.255.255.240','255.255.255.248','255.255.255.252','255.255.128.0'],
+   wrong:['255.255.255.5','255.255.255.1','255.0.255.0','256.0.0.0','255.255.255.260','192.168.1.0']},
+
+  {cat:'IT', q:'Welche dieser Abkürzungen bezeichnen echte Speicher- oder Hardware-Komponenten?',
+   correct:['RAM','SSD','HDD','CPU','GPU','ROM','NVMe','PSU','BIOS','UEFI'],
+   wrong:['HTTP','SMTP','OSPF','DHCP','VLAN','SQL']},
+
+  /* ---------- Allgemeinwissen-Erweiterung (faktisch geprüft) ---------- */
+  {cat:'Geografie', q:'Welche dieser Flüsse fließen (auch) durch Deutschland?',
+   correct:['Rhein','Elbe','Donau','Main','Mosel','Weser','Spree','Neckar','Oder','Saale'],
+   wrong:['Seine','Themse','Po','Rhône','Ebro','Wolga']},
+
+  {cat:'Geografie', q:'Welche dieser Länder nutzen den Euro als offizielle Währung?',
+   correct:['Deutschland','Frankreich','Italien','Spanien','Portugal','Niederlande','Österreich','Griechenland','Irland','Finnland'],
+   wrong:['Schweiz','Polen','Schweden','Dänemark','Tschechien','Norwegen']},
+
+  {cat:'Natur', q:'Welche dieser Himmelskörper gehören zu unserem Sonnensystem?',
+   correct:['Merkur','Venus','Erde','Mars','Jupiter','Saturn','Uranus','Neptun','Pluto','Ceres'],
+   wrong:['Sirius','Andromeda','Proxima Centauri','Beteigeuze','Wega','Polarstern']},
+
+  {cat:'Natur', q:'Welche dieser Begriffe sind echte chemische Elemente?',
+   correct:['Wasserstoff','Sauerstoff','Kohlenstoff','Eisen','Gold','Silber','Helium','Stickstoff','Kupfer','Zink'],
+   wrong:['Wasser','Bronze','Stahl','Messing','Luft','Diamant']},
+
+  {cat:'Natur', q:'Welche dieser Organe gehören zum menschlichen Körper?',
+   correct:['Herz','Leber','Niere','Lunge','Milz','Bauchspeicheldrüse','Magen','Darm','Gehirn','Schilddrüse'],
+   wrong:['Chloroplast','Kieme','Photosphäre','Staubblatt','Rhizom','Mitochondrium']},
+
+  {cat:'Geografie', q:'Welche dieser Städte sind Hauptstädte ihres Landes?',
+   correct:['Paris','Madrid','Rom','Wien','Bern','Lissabon','Warschau','Athen','Oslo','Prag'],
+   wrong:['Barcelona','Zürich','Mailand','Hamburg','Porto','Krakau']},
+
+  {cat:'Sport', q:'Welche dieser Sportarten stehen bei den olympischen Sommerspielen auf dem Programm?',
+   correct:['Schwimmen','Leichtathletik','Turnen','Rudern','Fechten','Judo','Handball','Basketball','Hockey','Bogenschießen'],
+   wrong:['Skispringen','Eishockey','Curling','Biathlon','Rodeln','Bob']},
+
+  {cat:'Geschichte', q:'Welche dieser Erfindungen/Entdeckungen fallen ins 20. Jahrhundert?',
+   correct:['Penicillin','Fernsehen','Transistor','Internet','Laser','Kernspaltung','Düsentriebwerk','Computer','Mondlandung','DNA-Struktur'],
+   wrong:['Buchdruck','Dampfmaschine','Glühbirne','Telefon','Fotografie','Dynamit']},
+
+  {cat:'Geografie', q:'Welche dieser Länder liegen (vollständig oder teilweise) auf dem afrikanischen Kontinent?',
+   correct:['Ägypten','Kenia','Nigeria','Marokko','Südafrika','Äthiopien','Ghana','Tansania','Algerien','Senegal'],
+   wrong:['Jordanien','Saudi-Arabien','Indien','Brasilien','Spanien','Jemen']},
+
+  {cat:'Natur', q:'Welche dieser Tiere sind wechselwarm (Reptilien/Amphibien/Fische)?',
+   correct:['Krokodil','Schlange','Eidechse','Frosch','Schildkröte','Salamander','Hai','Forelle','Gecko','Kröte'],
+   wrong:['Delfin','Adler','Fledermaus','Pinguin','Wal','Specht']},
+
+  /* ---------- IT/FISI-Erweiterung (faktisch geprüft) ---------- */
+  {cat:'IT', q:'Welche dieser Begriffe sind echte SQL-Schlüsselwörter?',
+   correct:['SELECT','INSERT','UPDATE','DELETE','WHERE','JOIN','GROUP BY','ORDER BY','HAVING','CREATE TABLE'],
+   wrong:['FETCHALL','GETROW','SORTBY','FILTER','LOOP','PRINT']},
+
+  {cat:'IT', q:'Welche dieser Begriffe bezeichnen echte HTTP-Methoden (Verben)?',
+   correct:['GET','POST','PUT','DELETE','PATCH','HEAD','OPTIONS','TRACE','CONNECT','PROPFIND'],
+   wrong:['SEND','FETCH','PULL','PUSH','REMOVE','READ']},
+
+  {cat:'IT', q:'Welche dieser Begriffe sind echte Linux-Distributionen?',
+   correct:['Ubuntu','Debian','Fedora','Arch Linux','openSUSE','CentOS','Linux Mint','Manjaro','Red Hat','Kali Linux'],
+   wrong:['Solaris','FreeBSD','Windows','macOS','Android Studio','PowerShell']},
+
+  {cat:'IT', q:'Welche dieser Begriffe gehören zur objektorientierten Programmierung?',
+   correct:['Klasse','Objekt','Vererbung','Polymorphie','Kapselung','Methode','Attribut','Konstruktor','Interface','Abstraktion'],
+   wrong:['Pivot-Tabelle','Subnetzmaske','Defragmentierung','Firewall','Treiber','Registry']},
+
+  {cat:'IT', q:'Welche dieser Begriffe sind gängige Versionsverwaltungs-/DevOps-Tools?',
+   correct:['Git','Docker','Jenkins','Kubernetes','Ansible','Terraform','GitLab','GitHub','SVN','Mercurial'],
+   wrong:['Photoshop','Excel','OneNote','Outlook','Notepad','WinRAR']},
+
+  {cat:'IT', q:'Welche dieser Begriffe bezeichnen echte RAID-Level (Standard oder verschachtelt)?',
+   correct:['RAID 0','RAID 1','RAID 2','RAID 3','RAID 4','RAID 5','RAID 6','RAID 10','RAID 50','RAID 60'],
+   wrong:['RAID 2.5','RAID 7000','RAID 99','RAID X','RAID Max','RAID Turbo']},
+
+  {cat:'IT', q:'Welche dieser Begriffe sind echte Datenbank-Management-Systeme?',
+   correct:['MySQL','PostgreSQL','Oracle','MariaDB','MongoDB','SQLite','Microsoft SQL Server','Redis','Cassandra','DB2'],
+   wrong:['Apache','Nginx','Tomcat','Kubernetes','Grafana','Kibana']},
+
+  {cat:'IT', q:'Welche dieser Tasten­kürzel funktionieren unter Windows standardmäßig?',
+   correct:['Strg+C (Kopieren)','Strg+V (Einfügen)','Strg+Z (Rückgängig)','Alt+Tab (Fenster wechseln)','Strg+Alt+Entf','Win+L (Sperren)','Strg+X (Ausschneiden)','Strg+A (Alles markieren)','Win+E (Explorer)','Strg+S (Speichern)'],
+   wrong:['Strg+Q (Kopieren)','Win+C (Sperren)','Alt+S (Explorer)','Strg+B (Speichern)','Win+Z (Rückgängig)','Strg+W (Markieren)']},
+
+  {cat:'IT', q:'Welche dieser Einheiten sind echte Datengrößen-/Übertragungseinheiten?',
+   correct:['Bit','Byte','Kilobyte','Megabyte','Gigabyte','Terabyte','Megabit/s','Gigabit/s','Petabyte','Kibibyte'],
+   wrong:['Hertz','Volt','Watt','Lumen','Pascal','Newton']},
+
+  {cat:'IT', q:'Welche dieser Begriffe gehören zur IT-Sicherheit?',
+   correct:['Firewall','VPN','Verschlüsselung','Zwei-Faktor-Authentifizierung','Phishing','Malware','Hashing','Zertifikat','IDS','Backup'],
+   wrong:['Defragmentierung','Autokorrektur','Bildschirmschoner','Zwischenablage','Lesezeichen','Papierkorb']},
+
+  /* ---------- Allgemeinwissen + neue Themen (faktisch geprüft) ---------- */
+  {cat:'Geografie', q:'Welche dieser Länder liegen (vollständig oder teilweise) in Asien?',
+   correct:['Japan','China','Indien','Thailand','Vietnam','Indonesien','Südkorea','Pakistan','Kasachstan','Iran'],
+   wrong:['Ägypten','Nigeria','Brasilien','Mexiko','Australien','Argentinien']},
+
+  {cat:'Geografie', q:'Welche dieser Inseln/Inselgruppen gehören zu Europa?',
+   correct:['Sizilien','Sardinien','Kreta','Mallorca','Korsika','Island','Irland','Zypern','Malta','Rügen'],
+   wrong:['Madagaskar','Bali','Kuba','Hawaii','Sansibar','Grönland']},
+
+  {cat:'Geschichte', q:'Welche dieser historischen Persönlichkeiten lebten in der Antike?',
+   correct:['Julius Cäsar','Alexander der Große','Cleopatra','Aristoteles','Sokrates','Augustus','Hannibal','Nero','Perikles','Cicero'],
+   wrong:['Napoleon','Karl der Große','Leonardo da Vinci','Christoph Kolumbus','Martin Luther','Dschingis Khan']},
+
+  {cat:'Natur', q:'Welche dieser Bäume sind Laubbäume?',
+   correct:['Eiche','Buche','Birke','Ahorn','Linde','Kastanie','Ulme','Esche','Pappel','Erle'],
+   wrong:['Fichte','Tanne','Kiefer','Lärche','Douglasie','Zeder']},
+
+  {cat:'Natur', q:'Welche dieser Edelsteine/Mineralien gibt es wirklich?',
+   correct:['Diamant','Rubin','Saphir','Smaragd','Topas','Amethyst','Opal','Türkis','Achat','Bernstein'],
+   wrong:['Kryptonit','Mithril','Adamantium','Vibranium','Tiberium','Dilithium']},
+
+  {cat:'Sport', q:'Welche dieser Sportarten werden mit einem Ball gespielt?',
+   correct:['Fußball','Basketball','Handball','Volleyball','Tennis','Golf','Rugby','Wasserball','Baseball','Tischtennis'],
+   wrong:['Eishockey','Fechten','Bogenschießen','Schwimmen','Turnen','Rudern']},
+
+  {cat:'Sport', q:'Welche dieser Länder standen schon im Finale einer Fußball-WM der Männer?',
+   correct:['Brasilien','Deutschland','Italien','Argentinien','Frankreich','Uruguay','England','Spanien','Niederlande','Kroatien'],
+   wrong:['Belgien','Portugal','Mexiko','USA','Dänemark','Kolumbien']},
+
+  {cat:'Musik', q:'Welche dieser Instrumente werden durch Anblasen gespielt (Blasinstrumente)?',
+   correct:['Trompete','Flöte','Klarinette','Posaune','Oboe','Saxophon','Tuba','Fagott','Horn','Querflöte'],
+   wrong:['Violine','Klavier','Schlagzeug','Harfe','Cello','Gitarre']},
+
+  {cat:'Musik', q:'Welche dieser Komponisten lebten in der Klassik/Romantik (18.–19. Jh.)?',
+   correct:['Beethoven','Mozart','Bach','Haydn','Schubert','Brahms','Chopin','Wagner','Schumann','Mendelssohn'],
+   wrong:['Elvis Presley','The Beatles','Michael Jackson','Hans Zimmer','Madonna','Freddie Mercury']},
+
+  {cat:'Film', q:'Welche dieser Regisseure gibt es wirklich?',
+   correct:['Steven Spielberg','Christopher Nolan','Quentin Tarantino','Martin Scorsese','James Cameron','Alfred Hitchcock','Stanley Kubrick','Ridley Scott','Tim Burton','Peter Jackson'],
+   wrong:['Tom Hanks','Brad Pitt','Leonardo DiCaprio','Morgan Freeman','Keanu Reeves','Will Smith']},
+
+  {cat:'Film', q:'Welche dieser Filme gehören zum „Der Herr der Ringe"- oder „Hobbit"-Filmuniversum von Peter Jackson?',
+   correct:['Die Gefährten','Die zwei Türme','Die Rückkehr des Königs','Eine unerwartete Reise','Smaugs Einöde','Die Schlacht der fünf Heere','The Fellowship of the Ring','The Two Towers','The Return of the King','An Unexpected Journey'],
+   wrong:['Game of Thrones','Narnia','Harry Potter','Eragon','Percy Jackson','Die Tribute von Panem']},
+
+  {cat:'Essen & Trinken', q:'Welche dieser Gerichte stammen ursprünglich aus Italien?',
+   correct:['Pizza','Lasagne','Risotto','Tiramisu','Carbonara','Ossobuco','Bruschetta','Minestrone','Panna Cotta','Saltimbocca'],
+   wrong:['Paella','Sushi','Gulasch','Croissant','Wiener Schnitzel','Hummus']},
+
+  {cat:'Essen & Trinken', q:'Welche dieser Begriffe bezeichnen echte Käsesorten?',
+   correct:['Gouda','Camembert','Mozzarella','Cheddar','Parmesan','Emmentaler','Brie','Feta','Gorgonzola','Roquefort'],
+   wrong:['Baguette','Espresso','Prosciutto','Chorizo','Ciabatta','Bratwurst']},
+
+  {cat:'Sprachen', q:'Welche dieser Sprachen sind romanische (aus dem Latein hervorgegangene) Sprachen?',
+   correct:['Französisch','Spanisch','Italienisch','Portugiesisch','Rumänisch','Katalanisch','Galicisch','Okzitanisch','Sardisch','Rätoromanisch'],
+   wrong:['Deutsch','Englisch','Niederländisch','Polnisch','Russisch','Schwedisch']},
+
+  {cat:'Sprachen', q:'Welche dieser Wörter sind im Deutschen Lehnwörter aus dem Französischen?',
+   correct:['Restaurant','Garage','Portemonnaie','Trottoir','Friseur','Etage','Bonbon','Chance','Niveau','Renaissance'],
+   wrong:['Computer','Handy','Keks','Streik','Konto','Algebra']},
+
+  {cat:'Kunst', q:'Welche dieser Personen waren bildende Künstler (Maler/Bildhauer)?',
+   correct:['Pablo Picasso','Vincent van Gogh','Leonardo da Vinci','Michelangelo','Claude Monet','Rembrandt','Salvador Dalí','Frida Kahlo','Andy Warhol','Auguste Rodin'],
+   wrong:['Ludwig van Beethoven','William Shakespeare','Albert Einstein','Johann Wolfgang von Goethe','Wolfgang Amadeus Mozart','Charles Darwin'],
+   },
+
+  {cat:'Kunst', q:'Welche dieser Begriffe bezeichnen echte Kunst-Epochen oder -Stile?',
+   correct:['Renaissance','Barock','Impressionismus','Expressionismus','Kubismus','Surrealismus','Romantik','Gotik','Pop Art','Bauhaus'],
+   wrong:['Quantismus','Digitalismus','Neoplastik 3D','Hyperbarock','Postmechanik','Trivialismus']},
+
+  {cat:'Geschichte', q:'Welche dieser Ereignisse fanden im 20. Jahrhundert statt?',
+   correct:['Erster Weltkrieg','Zweiter Weltkrieg','Mondlandung','Mauerfall','Russische Revolution','Gründung der UNO','Erfindung des Internets','Tschernobyl','Kalter Krieg','Frauenwahlrecht in Deutschland'],
+   wrong:['Französische Revolution','Reformation','Entdeckung Amerikas','Untergang Roms','Dreißigjähriger Krieg','Erfindung des Buchdrucks']},
+
+  {cat:'Natur', q:'Welche dieser Tiere sind Vögel?',
+   correct:['Adler','Pinguin','Strauß','Spatz','Eule','Storch','Möwe','Papagei','Specht','Flamingo'],
+   wrong:['Fledermaus','Delfin','Libelle','Schmetterling','Hai','Frosch']},
+
+  /* ---------- Erweiterung: Mythologie/Astronomie/Wirtschaft/Literatur/Auto/Games + Allgemeinwissen (geprüft) ---------- */
+  // ---------- Mythologie ----------
+  {cat:'Mythologie', q:'Welche dieser Gestalten sind Götter der griechischen Mythologie?',
+   correct:['Zeus','Hera','Poseidon','Athene','Apollon','Artemis','Ares','Aphrodite','Hermes','Hephaistos'],
+   wrong:['Jupiter','Odin','Thor','Ra','Anubis','Quetzalcoatl']},
+  {cat:'Mythologie', q:'Welche dieser Gestalten gehören zur nordischen (germanischen) Mythologie?',
+   correct:['Odin','Thor','Loki','Freya','Frigg','Baldur','Heimdall','Tyr','Frey','Hel'],
+   wrong:['Zeus','Anubis','Apollon','Vishnu','Osiris','Poseidon']},
+  {cat:'Mythologie', q:'Welche dieser Gottheiten stammen aus der ägyptischen Mythologie?',
+   correct:['Ra','Osiris','Isis','Anubis','Horus','Set','Thot','Hathor','Bastet','Sobek'],
+   wrong:['Zeus','Odin','Thor','Poseidon','Apollon','Mars']},
+  {cat:'Mythologie', q:'Welche dieser Helden/Figuren kommen in der griechischen Sagenwelt vor?',
+   correct:['Herakles','Achilles','Odysseus','Perseus','Theseus','Jason','Ödipus','Ikarus','Orpheus','Prometheus'],
+   wrong:['Siegfried','Beowulf','König Artus','Robin Hood','Gilgamesch','Romulus']},
+
+  // ---------- Astronomie ----------
+  {cat:'Astronomie', q:'Welche dieser Begriffe bezeichnen echte Monde von Planeten unseres Sonnensystems?',
+   correct:['Mond','Phobos','Deimos','Io','Europa','Ganymed','Kallisto','Titan','Enceladus','Triton'],
+   wrong:['Ceres','Pluto','Halley','Vesta','Eris','Pallas']},
+  {cat:'Astronomie', q:'Welche dieser Begriffe sind echte Sternbilder?',
+   correct:['Großer Bär','Orion','Kassiopeia','Skorpion','Löwe','Stier','Zwillinge','Schütze','Krebs','Waage'],
+   wrong:['Pegasusflügel','Sonnenkreis','Mondtor','Sternenpfad','Galaxie','Komet']},
+  {cat:'Astronomie', q:'Welche dieser Aussagen/Begriffe gehören zur Astronomie?',
+   correct:['Supernova','Schwarzes Loch','Galaxie','Nebel','Asteroid','Komet','Pulsar','Quasar','Lichtjahr','Roter Riese'],
+   wrong:['Tektonik','Photosynthese','Tsunami','Erosion','Magma','Gezeiten']},
+
+  // ---------- Wirtschaft ----------
+  {cat:'Wirtschaft', q:'Welche dieser Automarken gehören zum Volkswagen-Konzern?',
+   correct:['Volkswagen','Audi','Porsche','Škoda','SEAT','CUPRA','Lamborghini','Bentley','Ducati','VW Nutzfahrzeuge'],
+   wrong:['BMW','Mercedes-Benz','Toyota','Renault','Volvo','Opel']},
+  {cat:'Wirtschaft', q:'Welche dieser Begriffe sind echte Währungen?',
+   correct:['Euro','US-Dollar','Yen','Pfund','Franken','Rubel','Rupie','Peso','Won','Real'],
+   wrong:['Bitcoin-Cent','Kredit','Aktie','Dividende','Zins','Bonus']},
+  {cat:'Wirtschaft', q:'Welche dieser Unternehmen sind (primär) Technologie-/IT-Konzerne?',
+   correct:['Apple','Microsoft','Google','Amazon','Meta','Nvidia','Intel','IBM','Samsung','Oracle'],
+   wrong:['Nestlé','Coca-Cola','Shell','Volkswagen','McDonald\u2019s','Adidas']},
+  {cat:'Wirtschaft', q:'Welche dieser Begriffe gehören zur Betriebswirtschaft/Buchhaltung?',
+   correct:['Bilanz','Umsatz','Gewinn','Verlust','Liquidität','Eigenkapital','Fremdkapital','Rendite','Abschreibung','Cashflow'],
+   wrong:['Photosynthese','Subnetzmaske','Tonleiter','Brennweite','Drehmoment','Fluchtpunkt']},
+
+  // ---------- Literatur ----------
+  {cat:'Literatur', q:'Welche dieser Personen waren Schriftsteller/Dichter?',
+   correct:['Goethe','Schiller','Shakespeare','Kafka','Thomas Mann','Hemingway','Tolstoi','Dostojewski','Hesse','Brecht'],
+   wrong:['Beethoven','Picasso','Einstein','Edison','Newton','Mozart']},
+  {cat:'Literatur', q:'Welche dieser Werke stammen von William Shakespeare?',
+   correct:['Hamlet','Macbeth','Othello','Romeo und Julia','König Lear','Ein Sommernachtstraum','Der Sturm','Julius Cäsar','Richard III.','Viel Lärm um nichts'],
+   wrong:['Faust','Don Quijote','Krieg und Frieden','Der Prozess','Die Odyssee','Effi Briest']},
+  {cat:'Literatur', q:'Welche dieser Werke schrieb Johann Wolfgang von Goethe?',
+   correct:['Faust','Die Leiden des jungen Werthers','Wilhelm Meister','Egmont','Iphigenie auf Tauris','Götz von Berlichingen','Torquato Tasso','Die Wahlverwandtschaften','Reineke Fuchs','Hermann und Dorothea'],
+   wrong:['Die Räuber','Der Zauberberg','Hamlet','Buddenbrooks','Die Verwandlung','Im Westen nichts Neues']},
+
+  // ---------- Auto ----------
+  {cat:'Auto', q:'Welche dieser Marken sind deutsche Automobilhersteller?',
+   correct:['Volkswagen','BMW','Mercedes-Benz','Audi','Porsche','Opel','Smart','Maybach','MAN','Borgward'],
+   wrong:['Fiat','Renault','Toyota','Volvo','Skoda','Seat']},
+  {cat:'Auto', q:'Welche dieser Begriffe bezeichnen echte Bauteile eines Autos?',
+   correct:['Kupplung','Getriebe','Vergaser','Lichtmaschine','Zündkerze','Nockenwelle','Bremsscheibe','Auspuff','Kurbelwelle','Katalysator'],
+   wrong:['Resonanzboden','Subwoofer','Schaltkreis','Festplatte','Objektiv','Tastatur']},
+  {cat:'Auto', q:'Welche dieser Automarken stammen ursprünglich aus Italien?',
+   correct:['Ferrari','Lamborghini','Maserati','Alfa Romeo','Fiat','Lancia','Pagani','Abarth','Iso Rivolta','De Tomaso'],
+   wrong:['Porsche','Bentley','Aston Martin','Bugatti','Jaguar','Lexus']},
+
+  // ---------- Games ----------
+  {cat:'Games', q:'Welche dieser Begriffe sind echte Spielkonsolen?',
+   correct:['PlayStation','Xbox','Nintendo Switch','Game Boy','Nintendo 64','GameCube','Wii','Sega Mega Drive','Atari 2600','PlayStation Portable'],
+   wrong:['MacBook','iPad','Apple Watch','Kindle','Fire TV','Chromecast']},
+  {cat:'Games', q:'Welche dieser Begriffe sind echte Videospiel-Reihen?',
+   correct:['Mario','Zelda','Pokémon','Final Fantasy','The Sims','Tomb Raider','Assassin\u2019s Creed','Call of Duty','Minecraft','Tetris'],
+   wrong:['Star Trek','Herr der Ringe','Matrix','Avatar','Titanic','Inception']},
+  {cat:'Games', q:'Welche dieser Spielgenres gibt es in der Videospielwelt wirklich?',
+   correct:['Jump n Run','Ego-Shooter','Rollenspiel','Strategie','Rennspiel','Adventure','Simulation','Puzzle','Sportspiel','Open World'],
+   wrong:['Tonleiter-Spiel','Photosynthese-Spiel','Steuer-Shooter','Bilanz-RPG','Subnetz-Sim','Lichtjahr-Rennen']},
+
+  // ---------- Allgemeinwissen ----------
+  {cat:'Geografie', q:'Welche dieser Gewässer sind echte Ozeane oder Meere?',
+   correct:['Pazifik','Atlantik','Indischer Ozean','Arktischer Ozean','Mittelmeer','Nordsee','Ostsee','Schwarzes Meer','Rotes Meer','Kaspisches Meer'],
+   wrong:['Bodensee','Genfersee','Viktoriasee','Titicacasee','Baikalsee','Toter Fluss']},
+  {cat:'Geografie', q:'Welche dieser Berge/Gebirge gibt es wirklich auf der Erde?',
+   correct:['Mount Everest','K2','Matterhorn','Mont Blanc','Kilimandscharo','Zugspitze','Mount Fuji','Eiger','Großglockner','Denali'],
+   wrong:['Mount Doom','Schicksalsberg','Berg der Mitte','Wolkengipfel','Tiefseegraben','Kristallspitze']},
+  {cat:'Geografie', q:'Welche dieser Wüsten gibt es wirklich?',
+   correct:['Sahara','Gobi','Kalahari','Atacama','Namib','Mojave','Arabische Wüste','Taklamakan','Sonora','Karakum'],
+   wrong:['Amazonas-Wüste','Alpen-Wüste','Polar-Dschungel','Ozean-Wüste','Tundra-Sand','Regenwald-Sahel']},
+  {cat:'Natur', q:'Welche dieser Tiere leben (überwiegend) im Wasser?',
+   correct:['Hai','Wal','Delfin','Krake','Qualle','Seestern','Hummer','Aal','Rochen','Seepferdchen'],
+   wrong:['Adler','Gepard','Giraffe','Kamel','Strauß','Wolf']},
+  {cat:'Natur', q:'Welche dieser Gase kommen in der Erdatmosphäre vor?',
+   correct:['Stickstoff','Sauerstoff','Kohlendioxid','Argon','Neon','Helium','Methan','Wasserdampf','Ozon','Wasserstoff'],
+   wrong:['Chlorwasser','Eisengas','Salzluft','Goldnebel','Steinrauch','Sandgas']},
+  {cat:'Wissenschaft', q:'Welche dieser Einheiten sind echte physikalische SI-Einheiten oder gängige Einheiten?',
+   correct:['Meter','Kilogramm','Sekunde','Ampere','Kelvin','Volt','Watt','Newton','Pascal','Joule'],
+   wrong:['Byte','Pixel','Lux-Byte','Hertz-Meter','Voltmeter (Gerät)','Ampere-Stunde-Sekunde']},
+  {cat:'Wissenschaft', q:'Welche dieser Personen waren bedeutende Naturwissenschaftler/Erfinder?',
+   correct:['Albert Einstein','Isaac Newton','Marie Curie','Charles Darwin','Nikola Tesla','Galileo Galilei','Thomas Edison','Max Planck','Stephen Hawking','Alexander von Humboldt'],
+   wrong:['Pablo Picasso','Ludwig van Beethoven','William Shakespeare','Napoleon Bonaparte','Johann Sebastian Bach','Vincent van Gogh']},
+  {cat:'Geschichte', q:'Welche dieser Bauwerke sind weltberühmte historische Bauwerke/Weltwunder?',
+   correct:['Chinesische Mauer','Kolosseum','Machu Picchu','Christo Redentor','Petra','Chichén Itzá','Taj Mahal','Pyramiden von Gizeh','Akropolis','Hängende Gärten von Babylon'],
+   wrong:['Wolkenpalast','Glasbrücke des Nichts','Turm von Atlantis','Mondbasis Alpha','Kristallkathedrale des Mars','Schwebende Stadt']},
+  {cat:'Geschichte', q:'Welche dieser Reiche/Zivilisationen gab es in der Geschichte wirklich?',
+   correct:['Römisches Reich','Ägyptisches Reich','Osmanisches Reich','Byzantinisches Reich','Inka','Maya','Azteken','Perserreich','Mongolenreich','Britisches Empire'],
+   wrong:['Atlantis','Wakanda','Mittelerde','Narnia','El Dorado','Hyrule']},
+  {cat:'Sport', q:'Welche dieser Disziplinen gehören zur Leichtathletik?',
+   correct:['100-Meter-Lauf','Weitsprung','Hochsprung','Speerwurf','Kugelstoßen','Diskuswurf','Stabhochsprung','Marathon','Hürdenlauf','Hammerwurf'],
+   wrong:['Freistil-Schwimmen','Slalom','Dressur','Bankdrücken','Eiskunstlauf','Sprungbrett']},
+  {cat:'Sport', q:'Welche dieser Vereine sind deutsche Fußball-Bundesliga-Clubs (Tradition/aktuell)?',
+   correct:['FC Bayern München','Borussia Dortmund','FC Schalke 04','Werder Bremen','VfB Stuttgart','Bayer Leverkusen','Eintracht Frankfurt','Borussia Mönchengladbach','1. FC Köln','Hamburger SV'],
+   wrong:['Real Madrid','Juventus Turin','FC Liverpool','Ajax Amsterdam','Paris Saint-Germain','FC Porto']},
+  {cat:'Essen & Trinken', q:'Welche dieser Früchte sind botanisch Beeren oder zählen umgangssprachlich zu den Früchten?',
+   correct:['Apfel','Banane','Erdbeere','Kirsche','Traube','Orange','Birne','Pfirsich','Pflaume','Ananas'],
+   wrong:['Kartoffel','Möhre','Zwiebel','Brokkoli','Spinat','Knoblauch']},
+  {cat:'Essen & Trinken', q:'Welche dieser Getränke sind alkoholfrei (in ihrer Grundform)?',
+   correct:['Wasser','Apfelsaft','Limonade','Cola','Kaffee','Tee','Mineralwasser','Orangensaft','Eistee','Kakao'],
+   wrong:['Bier','Wein','Wodka','Whisky','Rum','Sekt']},
+  {cat:'Sprachen', q:'Welche dieser Sprachen sind germanische Sprachen?',
+   correct:['Deutsch','Englisch','Niederländisch','Schwedisch','Norwegisch','Dänisch','Isländisch','Afrikaans','Jiddisch','Friesisch'],
+   wrong:['Französisch','Spanisch','Italienisch','Polnisch','Russisch','Griechisch']},
+  {cat:'Sprachen', q:'Welche dieser Sprachen gehören zu den meistgesprochenen Sprachen der Welt (nach Sprecherzahl)?',
+   correct:['Englisch','Mandarin-Chinesisch','Hindi','Spanisch','Arabisch','Französisch','Bengali','Portugiesisch','Russisch','Urdu'],
+   wrong:['Latein','Esperanto','Klingonisch','Altgriechisch','Sanskrit','Gotisch']},
+  {cat:'Kunst', q:'Welche dieser berühmten Gemälde/Werke gibt es wirklich?',
+   correct:['Mona Lisa','Sternennacht','Der Schrei','Guernica','Das Abendmahl','Die Erschaffung Adams','Das Mädchen mit dem Perlenohrring','Die Nachtwache','Der Kuss','Seerosen'],
+   wrong:['Die rote Sonne des Nichts','Der ewige Würfel','Schatten der Galaxie','Das blaue Quadrat des Mars','Der singende Berg','Tanz der Pixel']},
+  {cat:'Musik', q:'Welche dieser Begriffe bezeichnen Musikgenres?',
+   correct:['Rock','Pop','Jazz','Klassik','Hip-Hop','Techno','Reggae','Blues','Metal','Country'],
+   wrong:['Barockmalerei','Impressionismus','Aquarell','Fresko','Mosaik','Skulptur']},
+  {cat:'Film', q:'Welche dieser Figuren sind Superhelden aus Comics/Filmen?',
+   correct:['Superman','Batman','Spider-Man','Iron Man','Hulk','Captain America','Thor','Wonder Woman','Flash','Black Panther'],
+   wrong:['Darth Vader','Gandalf','Harry Potter','James Bond','Indiana Jones','Frodo']},
+  {cat:'Natur', q:'Welche dieser Begriffe bezeichnen echte Wetter-/Naturphänomene?',
+   correct:['Gewitter','Tornado','Hurrikan','Regenbogen','Polarlicht','Nebel','Hagel','Blitz','Schneesturm','Sandsturm'],
+   wrong:['Sonnenregen aus Gold','Magnetschnee','Lichtfrost','Donnerstaub','Wolkenbeben','Sternenhagel']},
+  {cat:'Mythologie', q:'Welche dieser Fabelwesen kommen in Sagen/Mythen vor?',
+   correct:['Drache','Einhorn','Phönix','Zentaur','Greif','Minotaurus','Sphinx','Pegasus','Zyklop','Sirene'],
+   wrong:['Quantenwurm','Datendrache','Neon-Golem','Pixelgeist','Turbofalke','Laserkraken']},
+
+  /* ---------- Erweiterung 2: breit gemischt (geprüft) ---------- */
+  // Geografie
+  {cat:'Geografie', q:'Welche dieser Länder sind Mitglied der Europäischen Union (Stand 2026)?',
+   correct:['Deutschland','Frankreich','Italien','Spanien','Polen','Schweden','Österreich','Griechenland','Portugal','Kroatien'],
+   wrong:['Norwegen','Schweiz','Vereinigtes Königreich','Türkei','Serbien','Ukraine']},
+  {cat:'Geografie', q:'Welche dieser Städte liegen in den USA?',
+   correct:['New York','Los Angeles','Chicago','Houston','Miami','Boston','Seattle','Dallas','Las Vegas','San Francisco'],
+   wrong:['Toronto','Vancouver','London','Sydney','Mexiko-Stadt','Montreal']},
+  {cat:'Geografie', q:'Welche dieser Länder liegen in Südamerika?',
+   correct:['Brasilien','Argentinien','Chile','Peru','Kolumbien','Venezuela','Ecuador','Bolivien','Uruguay','Paraguay'],
+   wrong:['Mexiko','Panama','Spanien','Portugal','Kuba','Costa Rica']},
+  {cat:'Geografie', q:'Welche dieser Hauptstädte liegen in Afrika?',
+   correct:['Kairo','Nairobi','Pretoria','Lagos','Addis Abeba','Accra','Algier','Rabat','Dakar','Tunis'],
+   wrong:['Riad','Teheran','Bangkok','Lima','Canberra','Ankara']},
+  {cat:'Geografie', q:'Welche dieser deutschen Städte haben über 500.000 Einwohner?',
+   correct:['Berlin','Hamburg','München','Köln','Frankfurt am Main','Stuttgart','Düsseldorf','Leipzig','Dortmund','Essen'],
+   wrong:['Potsdam','Kiel','Erfurt','Rostock','Freiburg','Heidelberg']},
+
+  // Natur / Wissenschaft
+  {cat:'Natur', q:'Welche dieser Tiere sind Raubkatzen?',
+   correct:['Löwe','Tiger','Leopard','Gepard','Jaguar','Puma','Luchs','Schneeleopard','Panther','Ozelot'],
+   wrong:['Hyäne','Wolf','Fuchs','Bär','Wildhund','Schakal']},
+  {cat:'Natur', q:'Welche dieser Begriffe sind echte Wolkenarten?',
+   correct:['Cumulus','Stratus','Cirrus','Nimbostratus','Cumulonimbus','Altocumulus','Stratocumulus','Cirrostratus','Altostratus','Cirrocumulus'],
+   wrong:['Tornadus','Nebulus Maximus','Regenball','Sturmkegel','Blitzwolke','Donnernebel']},
+  {cat:'Wissenschaft', q:'Welche dieser chemischen Symbole stehen für das genannte Element richtig?',
+   correct:['Au (Gold)','Ag (Silber)','Fe (Eisen)','O (Sauerstoff)','H (Wasserstoff)','C (Kohlenstoff)','Na (Natrium)','Cu (Kupfer)','He (Helium)','Pb (Blei)'],
+   wrong:['Go (Gold)','Si (Silber)','Ir (Eisen)','S (Sauerstoff)','W (Wasserstoff)','Ka (Kalium)']},
+  {cat:'Wissenschaft', q:'Welche dieser Knochen gehören zum menschlichen Skelett?',
+   correct:['Oberschenkelknochen','Schienbein','Wadenbein','Speiche','Elle','Oberarmknochen','Schlüsselbein','Schulterblatt','Brustbein','Kniescheibe'],
+   wrong:['Panzerplatte','Kiemenbogen','Stoßzahn','Geweihknochen','Chitinplatte','Schnabelbein']},
+  {cat:'Natur', q:'Welche dieser Pflanzen sind Heil- oder Küchenkräuter?',
+   correct:['Basilikum','Thymian','Rosmarin','Salbei','Petersilie','Oregano','Minze','Schnittlauch','Dill','Kamille'],
+   wrong:['Eiche','Farn','Kaktus','Algen','Moos','Bambus']},
+
+  // Geschichte
+  {cat:'Geschichte', q:'Welche dieser Personen waren römische Kaiser?',
+   correct:['Augustus','Nero','Caligula','Trajan','Hadrian','Mark Aurel','Konstantin','Vespasian','Tiberius','Claudius'],
+   wrong:['Julius Cäsar','Hannibal','Cicero','Spartacus','Perikles','Sokrates']},
+  {cat:'Geschichte', q:'Welche dieser Erfindungen stammen aus der Zeit vor 1900?',
+   correct:['Buchdruck','Dampfmaschine','Telefon','Glühbirne','Fotografie','Eisenbahn','Telegraf','Dynamit','Automobil','Fahrrad'],
+   wrong:['Internet','Smartphone','Fernsehen','Computer','Mikrowelle','Düsenflugzeug']},
+  {cat:'Geschichte', q:'Welche dieser Staaten gehörten im Kalten Krieg zum Warschauer Pakt (Ostblock)?',
+   correct:['DDR','Polen','Tschechoslowakei','Ungarn','Rumänien','Bulgarien','Sowjetunion','Albanien'],
+   wrong:['BRD','Frankreich','Italien','Großbritannien','Spanien','Jugoslawien']},
+
+  // Sport
+  {cat:'Sport', q:'Welche dieser Sportarten sind Wintersportarten?',
+   correct:['Ski Alpin','Skispringen','Eishockey','Biathlon','Rodeln','Bob','Curling','Eiskunstlauf','Langlauf','Snowboard'],
+   wrong:['Beachvolleyball','Tennis','Rudern','Surfen','Leichtathletik','Schwimmen']},
+  {cat:'Sport', q:'Welche dieser Tennisturniere zählen zu den vier Grand-Slam-Turnieren?',
+   correct:['Wimbledon','US Open','French Open','Australian Open'],
+   wrong:['Davis Cup','ATP Finals','Masters Hamburg','Olympia-Tennis','Indian Wells','German Open']},
+  {cat:'Sport', q:'Welche dieser Begriffe sind echte Schach-Figuren?',
+   correct:['König','Dame','Turm','Läufer','Springer','Bauer'],
+   wrong:['Ritter','Magier','Drache','General','Späher','Wächter']},
+
+  // Essen
+  {cat:'Essen & Trinken', q:'Welche dieser Gewürze gibt es wirklich?',
+   correct:['Pfeffer','Zimt','Kurkuma','Paprika','Muskat','Ingwer','Kreuzkümmel','Safran','Kardamom','Koriander'],
+   wrong:['Saltbeere','Würzstein','Aromit','Speisesalz-X','Pulverkraut','Gewürzharz'],
+   },
+  {cat:'Essen & Trinken', q:'Welche dieser Gerichte stammen ursprünglich aus Deutschland/Österreich?',
+   correct:['Bratwurst','Sauerkraut','Schweinshaxe','Wiener Schnitzel','Brezel','Kartoffelsalat','Spätzle','Sauerbraten','Apfelstrudel','Eisbein'],
+   wrong:['Paella','Sushi','Tacos','Couscous','Pad Thai','Falafel']},
+
+  // Sprachen
+  {cat:'Sprachen', q:'Welche dieser Länder haben Spanisch als Amtssprache?',
+   correct:['Spanien','Mexiko','Argentinien','Kolumbien','Peru','Chile','Kuba','Venezuela','Ecuador','Bolivien'],
+   wrong:['Brasilien','Portugal','Italien','Frankreich','USA','Haiti']},
+  {cat:'Sprachen', q:'Welche dieser Begriffe sind grammatische Fälle (Kasus) im Deutschen?',
+   correct:['Nominativ','Genitiv','Dativ','Akkusativ'],
+   wrong:['Vokativ','Ablativ','Lokativ','Instrumental','Imperativ','Konjunktiv']},
+
+  // Kunst / Musik
+  {cat:'Kunst', q:'Welche dieser Künstler werden dem Impressionismus zugeordnet?',
+   correct:['Claude Monet','Edgar Degas','Auguste Renoir','Camille Pissarro','Édouard Manet','Alfred Sisley','Berthe Morisot','Gustave Caillebotte','Mary Cassatt','Frédéric Bazille'],
+   wrong:['Pablo Picasso','Salvador Dalí','Andy Warhol','Michelangelo','Jackson Pollock','Wassily Kandinsky']},
+  {cat:'Musik', q:'Welche dieser Tonarten/Noten gibt es in der westlichen Musik?',
+   correct:['C-Dur','a-Moll','G-Dur','e-Moll','F-Dur','d-Moll','D-Dur','h-Moll','B-Dur','g-Moll'],
+   wrong:['X-Dur','Q-Moll','H#-Dur','Z-Moll','Doppel-Dur','Neutral-Moll']},
+  {cat:'Musik', q:'Welche dieser Instrumente gehören zu den Tasteninstrumenten?',
+   correct:['Klavier','Flügel','Cembalo','Orgel','Keyboard','Akkordeon','Synthesizer','Spinett','Harmonium','Klavichord'],
+   wrong:['Geige','Trompete','Trommel','Harfe','Querflöte','Triangel']},
+
+  // Film / Games / Pop
+  {cat:'Film', q:'Welche dieser Filme gehören zum „Star Wars"-Universum?',
+   correct:['Eine neue Hoffnung','Das Imperium schlägt zurück','Die Rückkehr der Jedi-Ritter','Die dunkle Bedrohung','Angriff der Klonkrieger','Die Rache der Sith','Das Erwachen der Macht','Die letzten Jedi','Der Aufstieg Skywalkers','Rogue One'],
+   wrong:['Star Trek','Guardians of the Galaxy','Dune','Interstellar','Avatar','Blade Runner']},
+  {cat:'Games', q:'Welche dieser Figuren stammen aus Nintendo-Spielen?',
+   correct:['Mario','Luigi','Link','Zelda','Bowser','Yoshi','Peach','Donkey Kong','Kirby','Pikachu'],
+   wrong:['Sonic','Lara Croft','Master Chief','Kratos','Pac-Man','Crash Bandicoot']},
+  {cat:'Film', q:'Welche dieser Filme sind animierte Disney-/Pixar-Filme?',
+   correct:['Findet Nemo','Toy Story','Die Eiskönigin','Der König der Löwen','Oben','Coco','Cars','Ratatouille','Alles steht Kopf','WALL-E'],
+   wrong:['Shrek','Ich – einfach unverbesserlich','Drachenzähmen leicht gemacht','Madagascar','Kung Fu Panda','Der Polarexpress']},
+
+  // Mythologie / Astronomie (Ergänzung)
+  {cat:'Mythologie', q:'Welche dieser zwölf olympischen Götter gehören zur griechischen Mythologie?',
+   correct:['Zeus','Hera','Poseidon','Demeter','Athene','Apollon','Artemis','Ares','Aphrodite','Hephaistos'],
+   wrong:['Hades','Persephone','Pan','Helios','Eros','Nike']},
+  {cat:'Astronomie', q:'Welche dieser Aussagen über das Sonnensystem sind korrekt benannte Objekte?',
+   correct:['Sonne','Asteroidengürtel','Kuipergürtel','Oortsche Wolke','Saturnringe','Sonnenwind','Sonnenflecken','Sonnenkorona','Milchstraße','Planetensystem'],
+   wrong:['Galaktischer Kern der Erde','Mondatmosphäre aus Gold','Marskanäle (bewohnt)','Venusozeane','Jupiter-Festland','Sonnenkruste']},
+
+  // Wirtschaft / Allgemein
+  {cat:'Wirtschaft', q:'Welche dieser Begriffe sind echte Zahlungsmittel/Kryptowährungen oder Finanzbegriffe?',
+   correct:['Bitcoin','Ethereum','Aktie','Anleihe','Dividende','Zinssatz','Inflation','Börse','Fonds','Hypothek'],
+   wrong:['Photoncoin','Quantengeld','Sonnenkredit','Mondbörse','Galaxie-Aktie','Nebelfonds']},
+  {cat:'Wirtschaft', q:'Welche dieser Unternehmen sind deutsche DAX-Konzerne?',
+   correct:['SAP','Siemens','Allianz','BASF','Bayer','Adidas','BMW','Deutsche Bank','Mercedes-Benz','Volkswagen'],
+   wrong:['Apple','Toyota','Nestlé','Samsung','Shell','Sony']},
+
+  // Natur / Allgemein
+  {cat:'Natur', q:'Welche dieser Tiere sind Insekten?',
+   correct:['Biene','Ameise','Käfer','Libelle','Schmetterling','Wespe','Heuschrecke','Marienkäfer','Fliege','Mücke'],
+   wrong:['Spinne','Skorpion','Tausendfüßler','Regenwurm','Schnecke','Krebs']},
+  {cat:'Natur', q:'Welche dieser Begriffe bezeichnen Aggregatzustände oder Übergänge?',
+   correct:['fest','flüssig','gasförmig','Plasma','schmelzen','gefrieren','verdampfen','kondensieren','sublimieren','resublimieren'],
+   wrong:['rosten','brennen','mischen','filtern','lösen','wiegen']},
+
+  // Geschichte / Politik
+  {cat:'Geschichte', q:'Welche dieser Personen waren US-Präsidenten?',
+   correct:['George Washington','Abraham Lincoln','Franklin D. Roosevelt','John F. Kennedy','Barack Obama','Ronald Reagan','Richard Nixon','Bill Clinton','George W. Bush','Joe Biden'],
+   wrong:['Winston Churchill','Nelson Mandela','Charles de Gaulle','Helmut Kohl','Margaret Thatcher','Wladimir Putin']},
+  {cat:'Geschichte', q:'Welche dieser Ereignisse fanden vor dem Jahr 1500 statt?',
+   correct:['Untergang des Weströmischen Reichs','Bau der Pyramiden','Punische Kriege','Völkerwanderung','Kreuzzüge','Erfindung des Rades','Antikes Griechenland','Römische Republik','Wikingerzeit','Mittelalter'],
+   wrong:['Französische Revolution','Erster Weltkrieg','Mondlandung','Reformation','Amerikanische Unabhängigkeit','Industrielle Revolution']},
+
+  // Allgemeinwissen / Logik
+  {cat:'Wissenschaft', q:'Welche dieser Begriffe sind echte mathematische Konstanten oder Begriffe?',
+   correct:['Pi','Eulersche Zahl','Goldener Schnitt','Primzahl','Quadratwurzel','Bruch','Fakultät','Logarithmus','Integral','Ableitung'],
+   wrong:['Quantenbruch','Mondzahl','Sonnenwurzel','Galaxie-Pi','Turbofaktor','Lichtkonstante X']},
+  {cat:'Natur', q:'Welche dieser Farben gehören zu den Regenbogenfarben (Spektrum)?',
+   correct:['Rot','Orange','Gelb','Grün','Blau','Indigo','Violett'],
+   wrong:['Schwarz','Weiß','Braun','Grau','Magenta','Türkis']},
+  {cat:'Geografie', q:'Welche dieser Flüsse zählen zu den längsten Flüssen der Welt?',
+   correct:['Nil','Amazonas','Jangtsekiang','Mississippi','Jenissei','Gelber Fluss','Kongo','Mekong','Lena','Niger'],
+   wrong:['Themse','Spree','Seine','Tiber','Mosel','Main']},
+  {cat:'Essen & Trinken', q:'Welche dieser Begriffe sind echte Kaffeegetränke?',
+   correct:['Espresso','Cappuccino','Latte Macchiato','Americano','Flat White','Mokka','Cortado','Ristretto','Caffè Latte','Espresso Macchiato'],
+   wrong:['Matcha-Smoothie','Bubble Tea','Chai-Cola','Eisschokolade','Limonade','Energydrink']},
+  {cat:'Sprachen', q:'Welche dieser Wörter sind englische Lehnwörter (Anglizismen) im Deutschen?',
+   correct:['Computer','Handy','Meeting','Download','Smartphone','Update','Team','Manager','Cool','Internet'],
+   wrong:['Fenster','Tisch','Garten','Wasser','Brücke','Apfel']},
+  {cat:'Technik', q:'Welche dieser Begriffe bezeichnen echte Maßeinheiten für Datenmengen?',
+   correct:['Bit','Byte','Kilobyte','Megabyte','Gigabyte','Terabyte','Petabyte','Kibibyte','Mebibyte','Gibibyte'],
+   wrong:['Datron','Infobyte','Speicherwatt','Memo-Hertz','Bitvolt','Datenmeter']},
+
+];
+
+/* ---------- State ---------- */
+let questions = [];
+let players = [];        // setup: [{name}]
+let game = null;         // active game state
+let timerInterval = null;
+let editId = null;
+
+/* ---------- Storage ---------- */
+function loadQuestions(){
+  try{ const raw = localStorage.getItem(LS_Q);
+    questions = raw ? JSON.parse(raw) : JSON.parse(JSON.stringify(DEFAULT_QUESTIONS));
+  }catch(e){ questions = JSON.parse(JSON.stringify(DEFAULT_QUESTIONS)); }
+  if(!Array.isArray(questions) || !questions.length) questions = JSON.parse(JSON.stringify(DEFAULT_QUESTIONS));
+}
+function saveQuestions(){ localStorage.setItem(LS_Q, JSON.stringify(questions)); }
+function loadHighscores(){ try{ return JSON.parse(localStorage.getItem(LS_HS))||[] }catch(e){ return [] } }
+function saveHighscore(entry){
+  const hs = loadHighscores(); hs.push(entry);
+  hs.sort((a,b)=>b.score-a.score);
+  localStorage.setItem(LS_HS, JSON.stringify(hs.slice(0,10)));
+}
+
+/* Zuletzt verwendete Spieler-Aufstellung (für Vorausfüllen beim nächsten Start) */
+function loadSavedNames(){
+  try{ const n=JSON.parse(localStorage.getItem(LS_NAMES)); return Array.isArray(n)&&n.length?n:null; }
+  catch(e){ return null; }
+}
+function saveNames(names){
+  const clean=names.map(n=>String(n).trim()).filter(Boolean);
+  if(clean.length) localStorage.setItem(LS_NAMES, JSON.stringify(clean.slice(0,8)));
+}
+
+/* ---------- Setup screen ---------- */
+function renderPlayers(){
+  const box = document.getElementById('playerList'); box.innerHTML='';
+  const saved=loadSavedNames()||[];
+  const suggestId='nameSuggest';
+  if(saved.length){
+    let dl=document.getElementById(suggestId);
+    if(!dl){ dl=document.createElement('datalist'); dl.id=suggestId; box.appendChild(dl); }
+    dl.innerHTML=[...new Set(saved)].map(n=>`<option value="${escapeHtml(n)}">`).join('');
+    box.appendChild(dl);
+  }
+  players.forEach((p,i)=>{
+    const row=document.createElement('div'); row.className='player-row';
+    row.innerHTML=`<span class="dot" style="background:${PLAYER_COLORS[i%PLAYER_COLORS.length]}"></span>
+      <input value="${escapeHtml(p.name)}" maxlength="16" oninput="players[${i}].name=this.value" placeholder="Name"${saved.length?' list="'+suggestId+'"':''}>
+      <button onclick="removePlayer(${i})" title="Entfernen" ${players.length<=1?'disabled style=\"opacity:.3\"':''}>×</button>`;
+    box.appendChild(row);
+  });
+}
+function addPlayer(){ if(players.length>=8){toast('Maximal 8 Spieler','bad');return;} players.push({name:'Spieler '+(players.length+1)}); renderPlayers(); }
+function removePlayer(i){ if(players.length<=1)return; players.splice(i,1); renderPlayers(); }
+
+function renderCatFilter(){
+  const cats=[...new Set(questions.map(q=>q.cat))].sort();
+  const box=document.getElementById('catFilter'); box.innerHTML='';
+  cats.forEach(c=>{
+    const id='cat_'+btoa(unescape(encodeURIComponent(c))).replace(/=/g,'');
+    const lbl=document.createElement('label');
+    lbl.style.cssText='display:inline-flex;align-items:center;gap:6px;background:var(--panel2);border:1px solid var(--line);border-radius:20px;padding:6px 12px;font-size:13px;cursor:pointer;font-weight:600';
+    lbl.innerHTML=`<input type="checkbox" class="catChk" value="${escapeHtml(c)}" checked style="width:auto;margin:0"> ${escapeHtml(c)}`;
+    box.appendChild(lbl);
+  });
+}
+function selectedCats(){ return [...document.querySelectorAll('.catChk:checked')].map(c=>c.value); }
+
+/* ---------- Game flow ---------- */
+function startGame(){
+  // validate names
+  players.forEach((p,i)=>{ if(!p.name.trim()) p.name='Spieler '+(i+1); });
+  saveNames(players.map(p=>p.name));
+  const cats=selectedCats();
+  if(!cats.length){ toast('Mindestens eine Kategorie wählen','bad'); return; }
+  let pool=questions.filter(q=>cats.includes(q.cat) && q.correct && q.correct.length>=2);
+  if(!pool.length){ toast('Keine passenden Fragen gefunden','bad'); return; }
+
+  const want=parseInt(document.getElementById('roundCount').value,10);
+  pool=shuffle(pool.slice());
+  const rounds = pool.slice(0, Math.min(want, pool.length));
+  if(rounds.length < want){ toast(`Nur ${rounds.length} Fragen verfügbar – Partie mit ${rounds.length} Runden`,'bad'); }
+
+  game = {
+    rounds, total:rounds.length, idx:0,
+    timer: parseInt(document.getElementById('timerSel').value,10),
+    players: players.map((p,i)=>({name:p.name.trim(), color:PLAYER_COLORS[i%PLAYER_COLORS.length], score:0})),
+    turn:0
+  };
+  showHandoff();
+}
+
+function loadRound(){
+  const r=game.rounds[game.idx];
+  // build display answer pool: all correct + a few wrong, shuffled
+  const corr=r.correct.slice(0,10).map(a=>({text:a, ok:true, found:false}));
+  let wrongs=(r.wrong||[]).slice();
+  wrongs=shuffle(wrongs).slice(0, Math.min(wrongs.length, Math.max(4, Math.round(corr.length*0.7))));
+  const wrongObjs=wrongs.map(a=>({text:a, ok:false, found:false}));
+  game.round={
+    cat:r.cat, q:r.q,
+    pool: shuffle(corr.concat(wrongObjs)),
+    totalCorrect: corr.length,
+    foundCount:0, bank:0, over:false
+  };
+  // ladder values = 1..N cumulative style (each correct adds its index value)
+  game.round.rungValues = Array.from({length:corr.length},(_,k)=>k+1);
+
+  renderScoreStrip();
+  renderRoundHead();
+  renderLadder();
+  renderAnswers();
+  updateBank(false);
+  document.getElementById('bankBtn').disabled=true;
+  const n=game.round.totalCorrect;
+  document.getElementById('gameHint').textContent=`Diese Frage hat ${n} richtige Antworten. Tippe eine an, von der du glaubst, dass sie dazugehört.`;
+  startTimer();
+}
+
+function renderScoreStrip(){
+  const box=document.getElementById('scoreStrip'); box.innerHTML='';
+  game.players.forEach((p,i)=>{
+    const chip=document.createElement('div');
+    chip.className='scorechip'+(i===game.turn?' active':'');
+    chip.innerHTML=`<div class="pname"><span class="d" style="background:${p.color}"></span>${escapeHtml(p.name)}</div><div class="pts">${p.score}</div>`;
+    box.appendChild(chip);
+  });
+}
+function renderRoundHead(){
+  document.getElementById('gCat').textContent=game.round.cat;
+  document.getElementById('gMeta').textContent=`Runde ${game.idx+1} von ${game.total}`;
+  document.getElementById('gQuestion').textContent=game.round.q;
+  document.getElementById('turnName').textContent=game.players[game.turn].name+' am Zug';
+}
+function renderLadder(){
+  const box=document.getElementById('ladder'); box.innerHTML='';
+  game.round.rungValues.forEach((v,k)=>{
+    const found=k<game.round.foundCount;
+    const cur=k===game.round.foundCount && !game.round.over;
+    const div=document.createElement('div');
+    div.className='rung'+(found?' found':'')+(cur?' current':'');
+    div.innerHTML=`<div class="n">${k+1}.</div><div class="v">+${v}</div>`;
+    box.appendChild(div);
+  });
+}
+function renderAnswers(){
+  const box=document.getElementById('answers'); box.innerHTML='';
+  game.round.pool.forEach((a,i)=>{
+    const btn=document.createElement('button');
+    btn.innerHTML=`<span class="ic"></span><span>${escapeHtml(a.text)}</span>`;
+    if(a.found){ btn.classList.add(a.ok?'correct':'wrong'); btn.disabled=true;
+      btn.querySelector('.ic').textContent=a.ok?'✓':'✕'; }
+    else { btn.onclick=()=>pickAnswer(i); }
+    if(game.round.over) btn.disabled=true;
+    box.appendChild(btn);
+  });
+}
+
+function pickAnswer(i){
+  if(game.round.over) return;
+  const a=game.round.pool[i];
+  if(a.found) return;
+  a.found=true;
+  stopTimer();
+  if(a.ok){
+    game.round.foundCount++;
+    const gained=game.round.rungValues[game.round.foundCount-1];
+    game.round.bank+=gained;
+    flash('green'); buzz(30);
+    updateBank(true);
+    renderLadder(); renderAnswers();
+    document.getElementById('bankBtn').disabled=false;
+    if(game.round.foundCount>=game.round.totalCorrect){
+      // all found -> auto bank with bonus feel
+      document.getElementById('gameHint').textContent=`Alle ${game.round.totalCorrect} gefunden! 🎉 Punkte werden gesichert …`;
+      setTimeout(()=>{ toast('Komplett geknackt! +'+game.round.bank,'good'); bankPoints(); }, 900);
+    } else {
+      document.getElementById('gameHint').textContent=`Richtig! +${gained}. Weiter riskieren oder sichern?`;
+      startTimer();
+    }
+  } else {
+    // wrong
+    game.round.over=true;
+    game.round.bank=0;
+    flash('red'); buzz([40,30,40]);
+    revealAll();
+    renderAnswers();
+    document.getElementById('bankBtn').disabled=true;
+    document.getElementById('turnName').textContent='Runde verloren';
+    document.getElementById('bankAmt').textContent='0';
+    toast(game.players[game.turn].name+': falsch – Kasse weg!','bad');
+    setTimeout(nextTurn, 1700);
+  }
+}
+
+function revealAll(){
+  game.round.pool.forEach(a=>{ if(a.ok && !a.found){ a.found=true; a._reveal=true; } });
+  // re-render with reveal styling
+  const box=document.getElementById('answers'); box.innerHTML='';
+  game.round.pool.forEach((a)=>{
+    const btn=document.createElement('button'); btn.disabled=true;
+    btn.innerHTML=`<span class="ic"></span><span>${escapeHtml(a.text)}</span>`;
+    if(a._reveal){ btn.classList.add('reveal'); btn.querySelector('.ic').textContent='✓'; }
+    else if(a.found){ btn.classList.add(a.ok?'correct':'wrong'); btn.querySelector('.ic').textContent=a.ok?'✓':'✕'; }
+    box.appendChild(btn);
+  });
+}
+
+function bankPoints(){
+  if(game.round.over) return;
+  stopTimer();
+  const p=game.players[game.turn];
+  p.score+=game.round.bank;
+  game.round.over=true;
+  flash('green'); buzz(20);
+  renderScoreStrip();
+  if(game.round.bank>0) toast(p.name+' sichert +'+game.round.bank,'good');
+  document.getElementById('answers').querySelectorAll('button').forEach(b=>b.disabled=true);
+  document.getElementById('bankBtn').disabled=true;
+  setTimeout(nextTurn, 1100);
+}
+
+function nextTurn(){
+  // advance question each turn (Smart10-style: one question per player turn)
+  game.idx++;
+  game.turn=(game.turn+1)%game.players.length;
+  if(game.idx>=game.total){ endGame(); return; }
+  showHandoff();
+}
+
+function showHandoff(){
+  const next=game.players[game.turn];
+  const isFirst = game.idx===0;
+  // Solo-Spiel: kein Weiterreichen nötig, außer ganz am Anfang
+  if(game.players.length===1 && !isFirst){ revealRound(); return; }
+  document.getElementById('handoffPrev').textContent = isFirst ? 'Los geht\u2019s' : 'Gerät weiterreichen';
+  document.getElementById('handoffName').textContent=next.name;
+  document.getElementById('handoffDot').style.background=next.color;
+  document.getElementById('handoffMeta').textContent=`${isFirst?'Erste':'Nächste'} Frage · Runde ${game.idx+1} von ${game.total}`;
+  document.querySelector('#screen-handoff h1').textContent = isFirst ? 'Bereit?' : 'Gib das Gerät weiter an';
+  document.getElementById('handoffBtn').textContent = isFirst ? 'Frage aufdecken' : 'Bereit – Frage aufdecken';
+  show('handoff');
+}
+
+function revealRound(){
+  show('game');
+  loadRound();
+}
+
+function timeUp(){
+  stopTimer();
+  if(game.round.over) return;
+  game.round.over=true; game.round.bank=0;
+  flash('red'); buzz([50,40,50]);
+  revealAll();
+  document.getElementById('bankBtn').disabled=true;
+  document.getElementById('turnName').textContent='Zeit abgelaufen';
+  document.getElementById('bankAmt').textContent='0';
+  toast('Zeit abgelaufen – wie falsch!','bad');
+  setTimeout(nextTurn, 1700);
+}
+
+/* ---------- Timer ---------- */
+function startTimer(){
+  stopTimer();
+  const wrap=document.getElementById('timerWrap');
+  if(!game.timer){ wrap.classList.add('hidden'); return; }
+  wrap.classList.remove('hidden','warn');
+  let t=game.timer; const max=game.timer;
+  const arc=document.getElementById('timerArc'), num=document.getElementById('timerNum');
+  const C=163.36;
+  const tick=()=>{
+    num.textContent=t;
+    arc.style.strokeDashoffset=C*(1-t/max);
+    if(t<=5){ wrap.classList.add('warn'); arc.style.stroke='#ff5d73'; } else { arc.style.stroke='#ffd166'; }
+    if(t<=0){ timeUp(); return; }
+    t--;
+  };
+  tick();
+  timerInterval=setInterval(tick,1000);
+}
+function stopTimer(){ if(timerInterval){ clearInterval(timerInterval); timerInterval=null; } }
+
+/* ---------- UI helpers ---------- */
+function updateBank(pop){
+  const el=document.getElementById('bankAmt');
+  el.textContent=game.round.bank;
+  if(pop){ el.classList.remove('pop'); void el.offsetWidth; el.classList.add('pop'); }
+}
+function flash(color){
+  const f=document.getElementById('flash'); f.className=color;
+  setTimeout(()=>{ f.className=''; }, 260);
+}
+function buzz(p){ if(navigator.vibrate){ try{navigator.vibrate(p)}catch(e){} } }
+let toastTimer=null;
+function toast(msg,type){
+  const t=document.getElementById('toast'); t.textContent=msg;
+  t.className='toast show'+(type?' '+type:'');
+  clearTimeout(toastTimer);
+  toastTimer=setTimeout(()=>{ t.className='toast'+(type?' '+type:''); }, 2200);
+}
+
+/* ---------- Results ---------- */
+function endGame(){
+  stopTimer();
+  const ranked=game.players.slice().sort((a,b)=>b.score-a.score);
+  const winner=ranked[0];
+  saveHighscore({name:winner.name, score:winner.score, date:new Date().toLocaleDateString('de-DE')});
+  document.getElementById('winnerLine').innerHTML=`🏆 ${escapeHtml(winner.name)} gewinnt!`;
+  const box=document.getElementById('resultsBox'); box.innerHTML='';
+  const medals=['🥇','🥈','🥉'];
+  ranked.forEach((p,i)=>{
+    const row=document.createElement('div'); row.className='res-row'+(i===0?' win':'');
+    row.innerHTML=`<div class="rk">${medals[i]||(i+1)}</div>
+      <div class="rn"><span class="dot" style="display:inline-block;width:10px;height:10px;border-radius:50%;background:${p.color};margin-right:7px"></span>${escapeHtml(p.name)}</div>
+      <div class="rp">${p.score}</div>`;
+    box.appendChild(row);
+  });
+  show('results');
+}
+function rematch(){
+  game.players.forEach(p=>p.score=0);
+  game.idx=0; game.turn=0;
+  game.rounds=shuffle(game.rounds);
+  showHandoff();
+}
+function toSetup(){ show('setup'); renderHighscores(); renderCatFilter(); }
+
+function renderHighscores(){
+  const hs=loadHighscores(); const box=document.getElementById('highscoreBox');
+  if(!hs.length){ box.innerHTML='<p class="muted">Noch keine Einträge. Spiel die erste Partie!</p>'; return; }
+  box.innerHTML=hs.map((h,i)=>`<div style="display:flex;justify-content:space-between;padding:7px 0;border-bottom:1px solid var(--line)">
+    <span><b style="color:var(--gold);font-family:Georgia,serif">${i+1}.</b> ${escapeHtml(h.name)} <span class="muted" style="font-size:12px">· ${h.date}</span></span>
+    <b style="font-family:Georgia,serif">${h.score}</b></div>`).join('');
+}
+
+/* ---------- Screen mgmt ---------- */
+function show(name){
+  ['setup','game','handoff','results'].forEach(s=>document.getElementById('screen-'+s).classList.toggle('hidden',s!==name));
+  window.scrollTo(0,0);
+}
+function confirmQuit(){ askConfirm('Partie wirklich beenden? Der aktuelle Stand geht verloren.', ()=>{ stopTimer(); toSetup(); }, {title:'Partie beenden', yes:'Beenden'}); }
+
+/* ===================== EDITOR ===================== */
+function openEditor(){ resetForm(); renderQList(); refreshCatSuggest(); document.getElementById('editorOverlay').classList.remove('hidden'); }
+function closeEditor(){ document.getElementById('editorOverlay').classList.add('hidden'); renderCatFilter(); }
+function refreshCatSuggest(){
+  const dl=document.getElementById('catSuggest');
+  dl.innerHTML=[...new Set(questions.map(q=>q.cat))].map(c=>`<option value="${escapeHtml(c)}">`).join('');
+}
+function resetForm(){
+  editId=null;
+  document.getElementById('formTitle').textContent='Neue Frage';
+  document.getElementById('saveQBtn').textContent='Frage speichern';
+  ['fQuestion','fCat','fCorrect','fWrong'].forEach(id=>document.getElementById(id).value='');
+  updateCorrectCount();
+}
+function updateCorrectCount(){
+  const n=document.getElementById('fCorrect').value.split('\n').map(s=>s.trim()).filter(Boolean).length;
+  const el=document.getElementById('correctCount'); el.textContent=n+' / 10';
+  el.style.color = n===10 ? 'var(--green)' : (n>10?'var(--red)':'var(--muted)');
+}
+document.getElementById('fCorrect').addEventListener('input',updateCorrectCount);
+
+function saveQuestion(){
+  const q=document.getElementById('fQuestion').value.trim();
+  const cat=document.getElementById('fCat').value.trim()||'Allgemein';
+  const correct=document.getElementById('fCorrect').value.split('\n').map(s=>s.trim()).filter(Boolean);
+  const wrong=document.getElementById('fWrong').value.split('\n').map(s=>s.trim()).filter(Boolean);
+  if(!q){ toast('Frage fehlt','bad'); return; }
+  if(correct.length<2){ toast('Mindestens 2 richtige Antworten','bad'); return; }
+  if(correct.length>10){ toast('Maximal 10 richtige Antworten','bad'); return; }
+  const obj={cat,q,correct,wrong};
+  if(editId!==null){ questions[editId]=obj; } else { questions.push(obj); }
+  saveQuestions(); resetForm(); renderQList(); refreshCatSuggest();
+  toast('Gespeichert ✓','good');
+}
+function editQuestion(i){
+  const q=questions[i]; editId=i;
+  document.getElementById('formTitle').textContent='Frage bearbeiten';
+  document.getElementById('saveQBtn').textContent='Änderungen speichern';
+  document.getElementById('fQuestion').value=q.q;
+  document.getElementById('fCat').value=q.cat;
+  document.getElementById('fCorrect').value=q.correct.join('\n');
+  document.getElementById('fWrong').value=(q.wrong||[]).join('\n');
+  updateCorrectCount();
+  document.querySelector('#editorOverlay .modal').scrollTo({top:0,behavior:'smooth'});
+}
+function deleteQuestion(i){
+  askConfirm('Diese Frage löschen?', ()=>{
+    questions.splice(i,1); saveQuestions(); renderQList(); refreshCatSuggest();
+    if(editId===i) resetForm();
+    toast('Frage gelöscht','good');
+  }, {title:'Frage löschen', yes:'Löschen'});
+}
+function renderQList(){
+  const term=(document.getElementById('qSearch').value||'').toLowerCase();
+  const box=document.getElementById('qList'); box.innerHTML='';
+  document.getElementById('qTotal').textContent=questions.length;
+  questions.forEach((q,i)=>{
+    if(term && !(q.q.toLowerCase().includes(term)||q.cat.toLowerCase().includes(term))) return;
+    const div=document.createElement('div'); div.className='qitem';
+    div.innerHTML=`<div class="qi-top">
+        <div>
+          <div class="qi-cat">${escapeHtml(q.cat)} · ${q.correct.length} richtige</div>
+          <div class="qi-q">${escapeHtml(q.q)}</div>
+        </div>
+        <div class="qi-actions">
+          <button onclick="editQuestion(${i})">Bearb.</button>
+          <button onclick="deleteQuestion(${i})">Löschen</button>
+        </div>
+      </div>
+      <div class="qi-a">${q.correct.map(a=>`<span class="tag">${escapeHtml(a)}</span>`).join('')}</div>`;
+    box.appendChild(div);
+  });
+  if(!box.children.length) box.innerHTML='<p class="muted" style="padding:8px">Keine Treffer.</p>';
+}
+function restoreDefaults(){
+  askConfirm('Standard-Fragen ergänzen? Eigene Fragen bleiben erhalten, fehlende Standard-Fragen werden hinzugefügt.', ()=>{
+    const existing=new Set(questions.map(q=>q.q));
+    DEFAULT_QUESTIONS.forEach(d=>{ if(!existing.has(d.q)) questions.push(JSON.parse(JSON.stringify(d))); });
+    saveQuestions(); renderQList(); refreshCatSuggest(); toast('Standard-Fragen ergänzt','good');
+  }, {title:'Standard-Fragen', yes:'Ergänzen', danger:false});
+}
+function exportQuestions(){
+  const blob=new Blob([JSON.stringify(questions,null,2)],{type:'application/json'});
+  const a=document.createElement('a'); a.href=URL.createObjectURL(blob);
+  a.download='zehnerwissen-fragen.json'; a.click(); URL.revokeObjectURL(a.href);
+}
+function importQuestions(e){
+  const file=e.target.files[0]; if(!file) return;
+  const r=new FileReader();
+  r.onload=()=>{
+    try{
+      const data=JSON.parse(r.result);
+      if(!Array.isArray(data)) throw 0;
+      let added=0;
+      data.forEach(d=>{ if(d.q && Array.isArray(d.correct)){ questions.push({cat:d.cat||'Allgemein',q:d.q,correct:d.correct,wrong:d.wrong||[]}); added++; } });
+      saveQuestions(); renderQList(); refreshCatSuggest();
+      toast(added+' Fragen importiert','good');
+    }catch(err){ toast('Ungültige Datei','bad'); }
+    e.target.value='';
+  };
+  r.readAsText(file);
+}
+
+/* ---------- Modals ---------- */
+function openRules(){ document.getElementById('rulesOverlay').classList.remove('hidden'); }
+function openImpressum(){ document.getElementById('impressumOverlay').classList.remove('hidden'); }
+function closeModal(id){ document.getElementById(id).classList.add('hidden'); }
+document.querySelectorAll('.overlay').forEach(o=>o.addEventListener('click',e=>{ if(e.target===o) o.classList.add('hidden'); }));
+
+/* Custom confirm (native confirm() is blocked in sandboxed iframes) */
+function askConfirm(message, onYes, opts){
+  opts=opts||{};
+  document.getElementById('confirmTitle').textContent=opts.title||'Bestätigen';
+  document.getElementById('confirmMsg').textContent=message;
+  const yes=document.getElementById('confirmYes'), no=document.getElementById('confirmNo');
+  yes.textContent=opts.yes||'Ja, weiter';
+  yes.className='btn '+(opts.danger===false?'gold':'red');
+  const ov=document.getElementById('confirmOverlay');
+  const close=()=>{ ov.classList.add('hidden'); yes.onclick=null; no.onclick=null; };
+  yes.onclick=()=>{ close(); onYes(); };
+  no.onclick=close;
+  ov.classList.remove('hidden');
+}
+
+/* ---------- Utils ---------- */
+function shuffle(a){ a=a.slice(); for(let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; } return a; }
+function escapeHtml(s){ return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+
+/* ---------- Init ---------- */
+function init(){
+  loadQuestions();
+  const saved=loadSavedNames();
+  players = saved ? saved.map(n=>({name:n})) : [{name:'Spieler 1'},{name:'Spieler 2'}];
+  renderPlayers();
+  renderCatFilter();
+  renderHighscores();
+}
+init();
+</script>
+</body>
+</html>
