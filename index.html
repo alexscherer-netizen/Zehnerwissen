@@ -31,13 +31,13 @@ button{-webkit-tap-highlight-color:transparent; touch-action:manipulation}
 h1,h2,h3{font-family:Georgia,serif}
 
 /* ---- top bar ---- */
-.topbar{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:18px}
+.topbar{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:18px;flex-wrap:wrap}
 .logo{display:flex;align-items:center;gap:11px;font-weight:700}
 .logo .badge{width:42px;height:42px;border-radius:12px;background:linear-gradient(145deg,#1b3654,#0d1b2a);
   border:1px solid var(--line);display:grid;place-items:center;color:var(--gold);font-family:Georgia,serif;font-weight:700;font-size:20px;box-shadow:inset 0 1px 0 rgba(255,255,255,.06)}
 .logo .name{font-family:Georgia,serif;font-size:19px;letter-spacing:.3px}
 .logo .name small{display:block;font-family:Inter,sans-serif;font-size:10.5px;letter-spacing:2px;color:var(--muted);text-transform:uppercase;font-weight:600}
-.nav{display:flex;gap:6px}
+.nav{display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end}
 .nav button{background:var(--panel);border:1px solid var(--line);color:var(--muted);padding:8px 12px;border-radius:10px;font-size:13px;font-weight:600;cursor:pointer;transition:.15s}
 .nav button:hover{color:var(--ink);border-color:var(--gold2)}
 
@@ -164,6 +164,8 @@ label.fld{display:block;font-size:12.5px;color:var(--muted);font-weight:600;marg
 footer{margin-top:26px;text-align:center;color:var(--muted);font-size:12px;line-height:1.7}
 footer a{color:var(--gold2);text-decoration:none}
 .paypal{display:inline-flex;align-items:center;gap:7px;background:#ffc439;color:#003087;font-weight:800;padding:9px 15px;border-radius:10px;text-decoration:none;margin-top:10px;font-size:13.5px}
+.feedback-link{display:inline-flex;align-items:center;gap:7px;background:var(--panel2);border:1px solid var(--line);color:var(--ink);font-weight:700;padding:9px 15px;border-radius:10px;text-decoration:none;font-size:13.5px;transition:.15s}
+.feedback-link:hover{border-color:var(--gold2);color:var(--gold)}
 .pill{display:inline-block;background:var(--panel2);border:1px solid var(--line);border-radius:20px;padding:5px 12px;font-size:12px;color:var(--muted);font-weight:600}
 
 /* ===== Tablet (Hochformat & größere Phones quer) ===== */
@@ -238,6 +240,7 @@ footer a{color:var(--gold2);text-decoration:none}
     <div class="nav">
       <button onclick="openEditor()">Fragen</button>
       <button onclick="openRules()">Regeln</button>
+      <button onclick="sendFeedback()">Feedback</button>
       <button onclick="openImpressum()">Impressum</button>
     </div>
   </div>
@@ -368,6 +371,8 @@ footer a{color:var(--gold2);text-decoration:none}
     <div class="pill">Pass &amp; Play · Lokal gespeichert</div>
     <div style="margin-top:12px">Gefällt dir die App? Spendier mir einen Kaffee:</div>
     <a class="paypal" href="https://paypal.me/AlexanderGlauche" target="_blank" rel="noopener">PayPal · paypal.me/AlexanderGlauche</a>
+    <div style="margin-top:16px">Fehler in einer Frage entdeckt oder einen Wunsch? Schreib mir:</div>
+    <a class="feedback-link" style="margin-top:10px" href="#" onclick="sendFeedback();return false;">✉ Feedback senden</a>
     <div style="margin-top:14px">Inspiriert vom Spielprinzip von Smart10 · eigenständige, nicht-kommerzielle Umsetzung.</div>
   </footer>
 </div>
@@ -448,7 +453,38 @@ footer a{color:var(--gold2);text-decoration:none}
       <p style="margin-top:10px">E-Mail: <a href="mailto:info@alexander-scherer.com" style="color:var(--gold2)">info@alexander-scherer.com</a></p>
       <p style="margin-top:10px" class="muted">Kleingewerbe · Fotograf · Kleinunternehmer gemäß §19 UStG (keine Ausweisung der Umsatzsteuer).</p>
       <div class="divider"></div>
+      <p style="font-size:13px"><b>Datenschutz / Statistik</b></p>
+      <p class="muted" style="font-size:13px;margin-top:6px">Diese App erfasst anonyme Nutzungsstatistiken (Anzahl der Aufrufe und gestarteten Partien, gewählte Kategorien, Spieler- und Rundenzahl) auf einem Server in der EU (Supabase). Dabei werden <b>keine personenbezogenen Daten</b> gespeichert – keine IP-Adresse, keine Cookies, keine Namen, keine Geräte-Kennung. Die Spielernamen und alle Spielstände bleiben ausschließlich lokal auf deinem Gerät.</p>
+      <div class="divider"></div>
       <p class="muted" style="font-size:13px">„Smart10" ist eine Marke der Piatnik. Diese App ist eine eigenständige, nicht-kommerzielle Hobby-Umsetzung des Spielprinzips und steht in keiner Verbindung zum Rechteinhaber.</p>
+    </div>
+  </div>
+</div>
+
+<!-- ============ WELCOME / DATENSCHUTZ POPUP ============ -->
+<div id="welcomeOverlay" class="overlay hidden">
+  <div class="modal" style="max-width:480px">
+    <div class="mbody">
+      <div class="center">
+        <div style="font-size:46px;margin-bottom:4px">🎉</div>
+        <div class="eyebrow" style="margin-bottom:6px">Willkommen bei Zehnerwissen</div>
+        <h2 class="serif" style="font-size:23px;line-height:1.25">Danke, dass du die App testest!</h2>
+      </div>
+      <p class="lead" style="margin-top:14px;font-size:14.5px">Schön, dass du dabei bist. Diese App befindet sich im Test – über dein Feedback freue ich mich riesig (Button „Feedback" oben oder im Fußbereich). Wenn dir eine Frage falsch vorkommt oder dir etwas fehlt: einfach melden.</p>
+
+      <div class="divider"></div>
+
+      <p style="font-size:13.5px"><b style="color:var(--gold)">🔒 Datenschutz – kurz & ehrlich</b></p>
+      <p class="muted" style="font-size:13px;margin-top:8px">Damit ich sehe, ob die App genutzt wird, werden <b>anonyme Statistikdaten</b> erfasst:</p>
+      <ul style="margin:8px 0 0 2px;padding-left:18px;font-size:13px;color:var(--muted);line-height:1.7">
+        <li>Anzahl der App-Aufrufe und gestarteten Partien</li>
+        <li>Gewählte Kategorien, Spieler- und Rundenzahl</li>
+        <li>Zeitpunkt der Nutzung</li>
+      </ul>
+      <p class="muted" style="font-size:13px;margin-top:10px">Gespeichert auf einem Server in der EU (Supabase). <b style="color:var(--ink)">Es werden keine personenbezogenen Daten erhoben</b> – keine IP-Adresse, keine Cookies, keine Namen, keine Geräte-Kennung. Deine Spielernamen und alle Spielstände bleiben ausschließlich lokal auf deinem Gerät und werden nicht übertragen.</p>
+
+      <button class="btn gold block" style="margin-top:18px" onclick="dismissWelcome()">Alles klar – los geht's!</button>
+      <p class="hint center" style="margin-top:10px">Diese Infos findest du jederzeit wieder unter „Impressum".</p>
     </div>
   </div>
 </div>
@@ -479,7 +515,25 @@ footer a{color:var(--gold2);text-decoration:none}
 const LS_Q = 'zw_questions_v1';
 const LS_HS = 'zw_highscore_v1';
 const LS_NAMES = 'zw_players_v1';
+const LS_WELCOME = 'zw_welcome_seen_v1';
 const PLAYER_COLORS = ['#ffd166','#3ddc97','#5da9ff','#ff5d73','#c792ea','#ffa45d','#4dd0e1','#f78fb3'];
+
+/* ---------- Anonyme Nutzungsstatistik (DSGVO-konform: keine IP, kein Cookie, keine personenbezogenen Daten) ---------- */
+const STATS_URL = 'https://ugitunttmvswyxmyhnjb.supabase.co/rest/v1/zw_usage_events';
+const STATS_KEY = 'sb_publishable_WFqUr8SpoeBtZDHaGq5dlQ_VWBhJzT8';
+function trackEvent(type, extra){
+  // Fire-and-forget: stört die App nie, auch wenn offline oder Server nicht erreichbar
+  try{
+    const payload = Object.assign({ event_type: type }, extra||{});
+    fetch(STATS_URL, {
+      method:'POST',
+      headers:{ 'Content-Type':'application/json', 'apikey':STATS_KEY, 'Authorization':'Bearer '+STATS_KEY, 'Prefer':'return=minimal' },
+      body: JSON.stringify(payload),
+      keepalive:true
+    }).catch(()=>{});
+  }catch(e){ /* niemals die App blockieren */ }
+}
+
 
 /* ---------- Default question bank ---------- */
 const DEFAULT_QUESTIONS = [
@@ -1088,6 +1142,7 @@ function startGame(){
     players: players.map((p,i)=>({name:p.name.trim(), color:PLAYER_COLORS[i%PLAYER_COLORS.length], score:0})),
     turn:0
   };
+  trackEvent('game_start', { player_count: game.players.length, round_count: game.total, categories: cats });
   showHandoff();
 }
 
@@ -1448,8 +1503,32 @@ function importQuestions(e){
 /* ---------- Modals ---------- */
 function openRules(){ document.getElementById('rulesOverlay').classList.remove('hidden'); }
 function openImpressum(){ document.getElementById('impressumOverlay').classList.remove('hidden'); }
+
+function maybeShowWelcome(){
+  let seen=false;
+  try{ seen = localStorage.getItem(LS_WELCOME)==='1'; }catch(e){}
+  if(!seen){ document.getElementById('welcomeOverlay').classList.remove('hidden'); }
+}
+function dismissWelcome(){
+  try{ localStorage.setItem(LS_WELCOME,'1'); }catch(e){}
+  document.getElementById('welcomeOverlay').classList.add('hidden');
+}
+
+function sendFeedback(){
+  const to='info@alexander-scherer.com';
+  const subject='Zehnerwissen – Feedback';
+  let context='';
+  // Falls gerade eine Frage im Spiel sichtbar ist, automatisch anhängen
+  if(game && game.round && !document.getElementById('screen-game').classList.contains('hidden')){
+    context='\n\n---\nBetrifft aktuelle Frage (Kategorie '+game.round.cat+'):\n„'+game.round.q+'"';
+  }
+  const body='Hallo Alex,\n\nmein Feedback zur Zehnerwissen-App:\n\n[Hier dein Feedback – z. B. falsche Frage, Wunsch, Lob]'+context+'\n\nViele Grüße';
+  const url='mailto:'+to+'?subject='+encodeURIComponent(subject)+'&body='+encodeURIComponent(body);
+  window.location.href=url;
+}
+
 function closeModal(id){ document.getElementById(id).classList.add('hidden'); }
-document.querySelectorAll('.overlay').forEach(o=>o.addEventListener('click',e=>{ if(e.target===o) o.classList.add('hidden'); }));
+document.querySelectorAll('.overlay').forEach(o=>o.addEventListener('click',e=>{ if(e.target===o && o.id!=='welcomeOverlay') o.classList.add('hidden'); }));
 
 /* Custom confirm (native confirm() is blocked in sandboxed iframes) */
 function askConfirm(message, onYes, opts){
@@ -1478,6 +1557,8 @@ function init(){
   renderPlayers();
   renderCatFilter();
   renderHighscores();
+  trackEvent('app_open');
+  maybeShowWelcome();
 }
 init();
 </script>
